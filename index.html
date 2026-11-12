@@ -1,0 +1,2826 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TechConnect — Tecnologia com propósito. Desenvolvimento de sites, suporte técnico, manutenção e consultoria digital com acompanhamento contínuo em todo o Brasil." />
+  <meta name="theme-color" content="#0b192c" />
+  <title>TechConnect — Tecnologia com Propósito</title>
+
+  <!-- Google Fonts: DM Sans, Playfair Display & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Canvas Confetti para Easter Egg de Triplo Clique -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* =====================================================
+       1. SISTEMA DE DESIGN & VARIÁVEIS DE TEMA
+       ===================================================== */
+    :root {
+      --primary: #0b192c;
+      --primary-deep: #050d18;
+      --primary-soft: #1e3a5f;
+      --accent: #c6a15b;
+      --accent-light: #e6c88b;
+      --accent-dark: #a07d3b;
+      --teal: #14b8a6;
+      --paper: #fbf9f5;
+      --paper-card: #ffffff;
+      --cream: #f4efe6;
+      --sand: #e7ded0;
+      --ink: #111827;
+      --muted: #64748b;
+      --line: rgba(11, 25, 44, 0.12);
+      --shadow: 0 14px 35px rgba(11, 25, 44, 0.07);
+      --shadow-lg: 0 25px 60px rgba(11, 25, 44, 0.12);
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-pill: 9999px;
+    }
+
+    /* MODO ESCURO */
+    html.dark {
+      --primary: #1e3a5f;
+      --primary-deep: #050d18;
+      --primary-soft: #0b192c;
+      --paper: #070f1c;
+      --paper-card: #0f1c2e;
+      --cream: #14243b;
+      --sand: #1c314e;
+      --ink: #f8fafc;
+      --muted: #94a3b8;
+      --line: rgba(255, 255, 255, 0.12);
+      --shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 25px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    /* RESET BASE */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 58px; }
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body.menu-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; border: 0; background: transparent; }
+    img { display: block; max-width: 100%; }
+    ::selection { background: var(--accent-light); color: var(--primary-deep); }
+
+    /* CONTAINERS & TYPOGRAPHY */
+    .container { width: min(1200px, calc(100% - 40px)); margin: auto; }
+    .container-wide { width: min(1380px, calc(100% - 40px)); margin: auto; }
+    
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--accent-dark); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+    }
+    html.dark .eyebrow { color: var(--accent-light); }
+    .eyebrow::before { content: ""; width: 20px; height: 2px; background: currentColor; }
+    
+    .section-title {
+      font: 600 clamp(1.9rem, 3.6vw, 3rem)/1.15 var(--serif);
+      letter-spacing: -0.02em; color: var(--primary-deep); margin: 10px 0;
+    }
+    html.dark .section-title { color: #ffffff; }
+    .section-copy { max-width: 600px; color: var(--muted); font-size: 0.98rem; }
+    .section-head { margin-bottom: 44px; }
+    .section-head.center { text-align: center; }
+    .section-head.center .section-copy { margin: 0 auto; }
+    .section-head.center .eyebrow::before { display: none; }
+
+    /* BOTÕES GERAIS */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 22px; border-radius: var(--radius-pill); font-size: 0.82rem;
+      font-weight: 700; letter-spacing: 0.03em; white-space: nowrap;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0) scale(0.98); }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #ffffff;
+      box-shadow: 0 8px 20px rgba(198, 161, 91, 0.28);
+    }
+    .btn-gold:hover { background: linear-gradient(135deg, var(--accent-light), var(--accent)); color: var(--primary-deep); }
+    .btn-ghost { border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; }
+    .btn-ghost:hover { border-color: var(--accent-light); color: var(--accent-light); background: rgba(255,255,255,0.05); }
+    .btn-navy { background: var(--primary-deep); color: #ffffff; }
+    .btn-navy:hover { background: var(--primary-soft); color: var(--accent-light); }
+
+    /* ===== 2. CABEÇALHO COMPACTO (~58px) ===== */
+    header {
+      position: sticky; top: 0; z-index: 60; height: 58px;
+      background: rgba(251, 249, 245, 0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line); transition: background 0.3s ease;
+    }
+    html.dark header { background: rgba(7, 15, 28, 0.94); }
+    .nav-wrap { height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+
+    /* LOGO GEOMÉTRICO DUPLO ANEL */
+    .brand {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.98rem; font-weight: 700; color: var(--primary-deep);
+      white-space: nowrap; user-select: none;
+    }
+    html.dark .brand { color: #ffffff; }
+    .brand-mark {
+      width: 32px; height: 32px; border: 2px solid var(--accent); border-radius: 50%;
+      display: grid; place-items: center; color: var(--accent); font: 700 0.95rem var(--serif);
+      position: relative; background: var(--primary-deep); box-shadow: 0 0 10px rgba(198, 161, 91, 0.2);
+      transition: transform 0.3s ease;
+    }
+    .brand-mark::after { content: ""; position: absolute; inset: 2px; border: 1px solid rgba(198, 161, 91, 0.4); border-radius: 50%; }
+    .brand:hover .brand-mark { transform: rotate(15deg) scale(1.05); }
+    .brand small { display: block; font-size: 0.48rem; letter-spacing: 0.18em; color: var(--muted); font-weight: 600; margin-top: -3px; font-family: var(--sans); }
+
+    /* NAV LINKS COMPACTOS (EXATAMENTE 5 TÓPICOS) */
+    .nav-links { display: flex; align-items: center; gap: 20px; }
+    .nav-links a { font-size: 0.8rem; font-weight: 600; color: var(--muted); white-space: nowrap; transition: color 0.2s ease; }
+    .nav-links a:hover, .nav-links a.ativo { color: var(--accent-dark); }
+    html.dark .nav-links a:hover, html.dark .nav-links a.ativo { color: var(--accent-light); }
+
+    /* NAV ACTIONS COMPACTAS */
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-cta {
+      padding: 7px 16px; border-radius: var(--radius-pill); border: 1.5px solid var(--primary);
+      color: var(--primary) !important; font-weight: 700; font-size: 0.75rem; white-space: nowrap; transition: all 0.2s ease;
+    }
+    html.dark .nav-cta { border-color: var(--accent); color: var(--accent) !important; }
+    .nav-cta:hover { background: var(--primary); color: #ffffff !important; transform: translateY(-1px); }
+    html.dark .nav-cta:hover { background: var(--accent); color: var(--primary-deep) !important; }
+
+    .btn-icon {
+      width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line);
+      display: grid; place-items: center; color: var(--ink); font-size: 0.8rem; transition: all 0.2s ease; background: var(--paper-card);
+    }
+    .btn-icon:hover { border-color: var(--accent); color: var(--accent-dark); transform: scale(1.05); }
+    html.dark .btn-icon:hover { color: var(--accent-light); }
+    .menu-toggle { display: none; font-size: 1.25rem; color: var(--ink); padding: 4px; }
+
+    /* ===== SUMÁRIO COMPLETO EXPANSÍVEL ===== */
+    .nav-more-wrap { position: relative; flex: none; display:flex; align-items:center; }
+    .nav-more { width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: var(--paper-card); font-size: 1.45rem; line-height: 1; cursor: pointer; transition: .2s ease; display:grid; place-items:center; box-shadow:0 4px 14px rgba(0,0,0,.08); }
+    .nav-more:hover, .nav-more[aria-expanded="true"] { border-color: var(--accent); color: var(--accent-dark); transform:translateY(-1px); }
+    html.dark .nav-more:hover, html.dark .nav-more[aria-expanded="true"] { color: var(--accent-light); }
+    .nav-full-index { position: absolute; z-index: 1001; top: calc(100% + 13px); right: -8px; width: min(320px, calc(100vw - 28px)); max-height: min(76vh, 620px); overflow: auto; padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper-card); box-shadow: 0 22px 58px rgba(0,0,0,.34); transform-origin:top right; }
+    .nav-full-index:not([hidden]) { animation: indexDrop .18s ease-out; }
+    @keyframes indexDrop { from { opacity:0; transform:translateY(-7px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+    .nav-full-index:not([hidden]) { display: grid; gap: 3px; }
+    .nav-index-heading { display:flex; align-items:center; justify-content:space-between; padding: 2px 4px 10px; margin-bottom: 4px; border-bottom:1px solid var(--line); color:var(--accent-dark); font-size:.65rem; font-weight:800; letter-spacing:.14em; }
+    html.dark .nav-index-heading { color:var(--accent-light); }
+    .nav-index-heading button { border:0; background:transparent; color:var(--muted); font-size:1.25rem; cursor:pointer; }
+    .nav-full-index > a { padding:10px 11px; border-radius:9px; color:var(--ink); font-size:.82rem; font-weight:600; display:flex; align-items:center; gap:8px; }
+    .nav-full-index > a::before { content:""; width:5px; height:5px; border-radius:50%; background:var(--accent); flex:none; }
+    .nav-full-index > a:hover { background:var(--cream); color:var(--accent-dark); }
+    html.dark .nav-full-index > a:hover { background:#1b2a40; color:var(--accent-light); }
+
+    @media (max-width: 760px) { .nav-full-index { right:-48px; width:min(320px, calc(100vw - 24px)); } }
+
+    /* ===== 3. BANNER PRINCIPAL COM GRÁFICO VETORIAL INTENSO & PARALLAX GEOMÉTRICO (ORIGINAL 100% INTACTO) ===== */
+    .hero {
+      background: var(--primary-deep); color: #ffffff; min-height: 550px; position: relative;
+      overflow: hidden; display: flex; align-items: center; padding: 48px 0 60px;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(550px circle at var(--mx, 75%) var(--my, 35%), rgba(198, 161, 91, 0.16), transparent 70%),
+        linear-gradient(135deg, rgba(5, 13, 24, 0.96) 0%, rgba(11, 25, 44, 0.9) 60%, rgba(30, 58, 95, 0.82) 100%);
+      z-index: 1;
+    }
+    .hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
+    .hero .eyebrow { color: var(--accent-light); }
+    .hero h1 {
+      font: 600 clamp(2.2rem, 4.2vw, 3.8rem)/1.08 var(--serif); letter-spacing: -0.03em; margin: 14px 0 18px; color: #ffffff;
+      cursor: pointer; user-select: none;
+    }
+    .hero h1 em { color: var(--accent-light); font-style: italic; font-weight: 500; }
+    .hero-desc { max-width: 520px; color: rgba(255, 255, 255, 0.8); font-size: 0.98rem; line-height: 1.7; margin-bottom: 26px; }
+    .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+    /* CARD VETORIAL NAVEGADOR ILUSTRADO (ESTRUTURA ORIGINAL DO HERO INTACTA) */
+    .hero-visual { position: relative; width: 100%; display: grid; place-items: center; min-height: 340px; }
+    .hero-svg-card {
+      width: 100%; max-width: 500px; background: rgba(15, 28, 46, 0.88); border: 1.5px solid rgba(198, 161, 91, 0.4);
+      border-radius: var(--radius-md); padding: 16px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: relative; z-index: 2;
+    }
+    .browser-bar { display: flex; align-items: center; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 14px; }
+    .browser-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+    .browser-dot:nth-child(1) { background: #ef4444; }
+    .browser-dot:nth-child(2) { background: #f59e0b; }
+    .browser-dot:nth-child(3) { background: #10b981; }
+    .browser-address { margin-left: 10px; background: rgba(255,255,255,0.06); padding: 4px 14px; border-radius: var(--radius-pill); font-size: 0.7rem; color: var(--accent-light); font-family: var(--mono); width: 100%; }
+
+    .hero-svg-content { position: relative; border-radius: 10px; overflow: hidden; background: #070f1c; border: 1px solid rgba(198, 161, 91, 0.25); }
+
+    .hero-badge {
+      position: absolute; bottom: -18px; left: -16px; background: var(--primary-deep);
+      border: 1.5px solid var(--accent); padding: 12px 18px; border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 12px; backdrop-filter: blur(8px); z-index: 3;
+    }
+    .hero-badge i { font-size: 1.3rem; color: var(--accent); }
+    .hero-badge strong { display: block; font-size: 0.9rem; color: #fff; font-family: var(--serif); }
+    .hero-badge span { font-size: 0.7rem; color: rgba(255, 255, 255, 0.7); }
+
+    /* FORMAS PARALLAX ILUSTRATIVAS (.forma.f1, .forma.f2, .forma.f3) */
+    .forma { position: absolute; pointer-events: none; opacity: 0.85; transition: transform 0.15s cubic-bezier(0.1, 0.7, 0.1, 1); z-index: 1; }
+    .forma.f1 { top: -10px; right: 10px; width: 46px; height: 46px; border: 3px solid var(--accent); border-radius: 50%; animation: floatA 7s ease-in-out infinite alternate; }
+    .forma.f2 { bottom: -10px; left: -20px; width: 36px; height: 36px; border: 3px solid var(--accent-light); transform: rotate(45deg); animation: floatB 9s ease-in-out infinite alternate; }
+    .forma.f3 { top: 40%; right: -25px; width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 32px solid var(--teal); opacity: 0.6; animation: floatA 8s ease-in-out infinite alternate-reverse; }
+    @keyframes floatA { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-16px) rotate(15deg); } }
+    @keyframes floatB { 0% { transform: translateY(0) rotate(45deg); } 100% { transform: translateY(18px) rotate(60deg); } }
+
+    /* ===== 4. FAIXA DE ESTATÍSTICAS ===== */
+    .stats { background: var(--paper-card); border-bottom: 1px solid var(--line); box-shadow: var(--shadow); position: relative; z-index: 10; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; padding: 28px 0; }
+    .stats-item + .stats-item { border-left: 1px solid var(--line); }
+    .stats-item strong { display: block; font: 700 clamp(2rem, 3.6vw, 2.8rem)/1 var(--serif); color: var(--accent-dark); margin-bottom: 4px; }
+    html.dark .stats-item strong { color: var(--accent-light); }
+    .stats-item span { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+    .stats-item.clickable { cursor: pointer; transition: transform 0.2s ease; }
+    .stats-item.clickable:hover { transform: translateY(-3px); }
+
+    /* ===== 5. SOBRE A EMPRESA ===== */
+    section { padding: 85px 0; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+    .about-visual { position: relative; }
+    .about-visual img { width: 100%; aspect-ratio: 5/4; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .about-stamp {
+      position: absolute; right: -16px; bottom: -24px; background: var(--primary-deep); color: #ffffff;
+      padding: 20px 24px; border-radius: var(--radius-md); border: 1.5px solid var(--accent); box-shadow: var(--shadow-lg); max-width: 210px; user-select: none;
+    }
+    .about-stamp strong { display: block; font: 700 1.6rem/1 var(--serif); color: var(--accent-light); }
+    .about-stamp span { font-size: 0.7rem; color: rgba(255, 255, 255, 0.75); margin-top: 4px; display: block; }
+    .about-text p { color: var(--muted); font-size: 0.98rem; margin-bottom: 16px; }
+    .about-fatos { list-style: none; margin: 24px 0 28px; display: grid; gap: 10px; font-size: 0.92rem; font-weight: 600; }
+    .about-fatos li { display: flex; align-items: center; gap: 10px; color: var(--ink); }
+    html.dark .about-fatos li { color: #ffffff; }
+    .about-fatos li i { color: var(--accent-dark); font-size: 0.85rem; }
+    html.dark .about-fatos li i { color: var(--accent-light); }
+
+    /* ===== 6. MISSÃO, VISÃO E VALORES ===== */
+    .proposito { background: var(--primary-deep); color: #ffffff; }
+    .proposito .section-title { color: #ffffff; }
+    .proposito .section-copy { color: rgba(255, 255, 255, 0.75); }
+    .pilares { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .pilar {
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md); overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column;
+    }
+    .pilar:hover { transform: translateY(-6px); background: rgba(255, 255, 255, 0.08); border-color: var(--accent-light); }
+    .pilar-thumb { position: relative; height: 165px; overflow: hidden; background: var(--primary-soft); }
+    .pilar-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; opacity: 0.92; }
+    .pilar:hover .pilar-thumb img { transform: scale(1.06); opacity: 1; }
+    .pilar-thumb::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 35%, rgba(5, 13, 24, 0.9) 100%);
+    }
+    .pilar-corpo { padding: 0 26px 30px; position: relative; flex: 1; display: flex; flex-direction: column; }
+    .pilar-icon {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: var(--primary-deep);
+      display: grid; place-items: center; font-size: 1.2rem; margin: -24px 0 16px; position: relative; z-index: 2;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+    .pilar h3 { font: 600 1.55rem var(--serif); margin-bottom: 6px; color: #ffffff; }
+    .pilar-lema { color: var(--accent-light); font-weight: 700; font-size: 0.84rem; margin-bottom: 12px; }
+    .pilar p { font-size: 0.9rem; color: rgba(255, 255, 255, 0.75); margin-bottom: 16px; }
+    .pilar ul { list-style: none; display: grid; gap: 8px; font-size: 0.82rem; color: rgba(255, 255, 255, 0.85); border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 14px; margin-top: auto; }
+    .pilar ul li::before { content: "✦ "; color: var(--accent-light); margin-right: 4px; }
+
+    /* ===== 7. SERVIÇOS ===== */
+    .services { background: var(--cream); }
+    html.dark .services { background: var(--paper); }
+    .service-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .service-card {
+      background: var(--paper-card); border: 1px solid var(--line); border-radius: var(--radius-md);
+      display: flex; overflow: hidden; box-shadow: var(--shadow); transition: all 0.3s ease; position: relative;
+    }
+    .service-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+    .service-card .thumb { flex: 0 0 38%; overflow: hidden; background: var(--primary-soft); position: relative; }
+    .service-card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .service-card:hover .thumb img { transform: scale(1.08); }
+    .service-card .corpo { padding: 26px 24px; display: flex; flex-direction: column; flex: 1; }
+    .service-card h3 { font: 600 1.35rem var(--serif); color: var(--primary-deep); margin-bottom: 8px; }
+    html.dark .service-card h3 { color: #ffffff; }
+    .service-card p { font-size: 0.88rem; color: var(--muted); margin-bottom: 20px; flex: 1; line-height: 1.6; }
+    .card-link {
+      color: var(--accent-dark); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.04em;
+      text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s ease; cursor: pointer;
+    }
+    html.dark .card-link { color: var(--accent-light); }
+    .card-link:hover { gap: 10px; }
+
+    /* ===== 8. PROCESSO (COMO TRABALHAMOS) ===== */
+    .processo { background: var(--paper); }
+    .etapas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; position: relative; margin-top: 20px; }
+    .etapas::before { content: ""; position: absolute; top: 24px; left: 24px; right: 24px; height: 2px; background: var(--line); z-index: 1; }
+    .etapa {
+      position: relative; z-index: 2; background: var(--paper-card); border: 1px solid var(--line);
+      border-radius: var(--radius-md); padding: 26px 20px; transition: all 0.3s ease; cursor: pointer;
+    }
+    .etapa:hover, .etapa.active { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow); }
+    .etapa-num {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: var(--accent-light);
+      border: 3px solid var(--paper-card); display: grid; place-items: center; font: 700 1.15rem var(--serif);
+      margin-bottom: 16px; transition: all 0.3s ease;
+    }
+    .etapa:hover .etapa-num, .etapa.active .etapa-num { background: var(--accent); color: var(--primary-deep); }
+    .etapa h3 { font: 600 1.15rem var(--serif); color: var(--primary-deep); margin-bottom: 6px; }
+    html.dark .etapa h3 { color: #ffffff; }
+    .etapa p { font-size: 0.84rem; color: var(--muted); margin-bottom: 10px; }
+    .etapa small { color: var(--accent-dark); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.08em; }
+    html.dark .etapa small { color: var(--accent-light); }
+    
+    .process-detail-box {
+      margin-top: 30px; background: var(--cream); border: 1px solid var(--line);
+      border-radius: var(--radius-md); padding: 24px 28px;
+      display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: center;
+    }
+    html.dark .process-detail-box { background: var(--paper-card); }
+    .process-detail-box img {
+      width: 100%; height: 145px; object-fit: cover; border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+    }
+    .process-detail-box h4 { font: 600 1.3rem var(--serif); color: var(--primary-deep); margin-bottom: 8px; }
+    html.dark .process-detail-box h4 { color: #ffffff; }
+
+    /* ===== 9. PORTFÓLIO DE PROJETOS ===== */
+    .projetos { background: var(--paper); }
+    .proj-barra { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .filtros { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      border: 1px solid var(--line); background: var(--paper-card); padding: 8px 18px; font-size: 0.78rem;
+      font-weight: 700; color: var(--ink); border-radius: var(--radius-pill); transition: all 0.25s ease; cursor: pointer;
+    }
+    html.dark .chip { color: #ffffff; }
+    .chip:hover, .chip[aria-pressed="true"], .chip.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+    html.dark .chip:hover, html.dark .chip[aria-pressed="true"], html.dark .chip.active { background: var(--accent); color: var(--primary-deep); border-color: var(--accent); }
+    .busca {
+      padding: 9px 18px; border: 1px solid var(--line); border-radius: var(--radius-pill); min-width: 240px;
+      background: var(--paper-card); outline: none; font-size: 0.82rem; transition: all 0.2s ease;
+    }
+    html.dark .busca { color: #ffffff; }
+    .busca:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(198, 161, 91, 0.2); }
+    
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .project {
+      position: relative; border-radius: var(--radius-md); overflow: hidden; background: var(--primary-deep);
+      color: #ffffff; min-height: 260px; cursor: pointer; box-shadow: var(--shadow); transition: all 0.3s ease;
+    }
+    .project[hidden] { display: none; }
+    .project img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform 0.6s ease; opacity: 0.88; }
+    .project::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(5, 13, 24, 0.94) 0%, rgba(5, 13, 24, 0.35) 60%, transparent 100%); }
+    .project:hover img { transform: scale(1.08); opacity: 0.98; }
+    .project-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+    .project-detail-grid > div { padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--paper-card); }
+    .project-detail-grid small { display:block; color:var(--accent-dark); font-size:.62rem; font-weight:800; letter-spacing:.1em; margin-bottom:5px; }
+    .project-detail-grid strong { display:block; color:var(--ink); font-size:.82rem; }
+    #mp-detalhes h4 { margin:15px 0 6px; color:var(--ink); font:600 1rem var(--serif); }
+    #mp-detalhes p { margin:0 0 8px; color:var(--muted); line-height:1.65; }
+    #mp-detalhes ul { margin:7px 0 12px; padding-left:20px; color:var(--ink); display:grid; gap:5px; }
+    #mp-detalhes li::marker { color:var(--accent-dark); }
+    #mp-detalhes .project-detail-note { margin-top:14px; padding:10px 12px; border-left:3px solid var(--accent); background:var(--paper-card); border-radius:0 8px 8px 0; font-size:.76rem; }
+    .project-info { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; }
+    .project-info small { color: var(--accent-light); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .project-info h3 { font: 600 1.35rem var(--serif); margin: 4px 0 6px; color: #ffffff; }
+    .project-info p { font-size: 0.8rem; color: rgba(255, 255, 255, 0.85); margin: 0; line-height: 1.45; }
+    .project .ver {
+      position: absolute; top: 16px; right: 16px; z-index: 2; background: var(--accent); color: var(--primary-deep);
+      font-size: 0.68rem; font-weight: 700; padding: 5px 12px; border-radius: var(--radius-pill); opacity: 0;
+      transform: translateY(-6px); transition: all 0.3s ease;
+    }
+    .project:hover .ver { opacity: 1; transform: translateY(0); }
+    .proj-rodape { text-align: center; margin-top: 36px; font-size: 0.85rem; color: var(--muted); }
+
+    /* ===== 10. DIFERENCIAIS ===== */
+    .manifesto { background: var(--primary-deep); color: #ffffff; position: relative; overflow: hidden; }
+    .manifesto .section-title { color: #ffffff; }
+    .manifesto .section-copy { color: rgba(255, 255, 255, 0.7); }
+    .dif { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 40px; margin-top: 30px; }
+    .dif-abas { display: grid; gap: 10px; }
+    .aba {
+      display: flex; align-items: center; gap: 14px; text-align: left; background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.75); padding: 16px 20px;
+      border-radius: var(--radius-md); cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 0.9rem;
+    }
+    .aba i {
+      width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--accent); display: grid;
+      place-items: center; color: var(--accent-light); font-size: 1rem; flex: none; transition: all 0.3s ease;
+    }
+    .aba:hover, .aba[aria-selected="true"] { background: rgba(255, 255, 255, 0.08); border-color: var(--accent-light); color: #ffffff; transform: translateX(6px); }
+    .aba[aria-selected="true"] i { background: var(--accent); color: var(--primary-deep); }
+    .dif-painel { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 30px; animation: fadeIn 0.4s ease; }
+    .dif-painel[hidden] { display: none; }
+    .dif-painel-img {
+      width: 100%; height: 170px; object-fit: cover; border-radius: var(--radius-sm);
+      margin-bottom: 20px; border: 1px solid rgba(198, 161, 91, 0.3);
+    }
+    .dif-painel h3 { font: 600 1.8rem var(--serif); margin-bottom: 12px; color: #ffffff; }
+    .dif-painel p { color: rgba(255, 255, 255, 0.8); font-size: 0.94rem; margin-bottom: 20px; }
+    .dif-painel ul { list-style: none; display: grid; gap: 10px; margin-bottom: 24px; font-size: 0.86rem; }
+    .dif-painel li::before { content: "✓ "; color: var(--accent-light); margin-right: 6px; font-weight: 700; }
+    .medidor { height: 7px; background: rgba(255, 255, 255, 0.12); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+    .medidor i { display: block; height: 100%; width: var(--v); background: linear-gradient(90deg, var(--accent), var(--teal)); }
+
+    /* ===== 11. DEPOIMENTOS DE CLIENTES ===== */
+    .testimonials { background: var(--paper); }
+    .dep-abas { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 34px; }
+    .dep-painel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .dep-painel[hidden] { display: none; }
+    .depo {
+      background: var(--paper-card); border: 1px solid var(--line); border-radius: var(--radius-md);
+      padding: 28px 24px; display: flex; flex-direction: column; justify-space-between; box-shadow: var(--shadow); transition: all 0.3s ease;
+    }
+    .depo:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+    .depo .stars { color: var(--accent-dark); letter-spacing: 2px; font-size: 0.85rem; margin-bottom: 14px; }
+    html.dark .depo .stars { color: var(--accent-light); }
+    .depo blockquote p { font: 400 0.96rem/1.55 var(--sans); color: var(--ink); margin-bottom: 20px; }
+    html.dark .depo blockquote p { color: #f8fafc; }
+    .depo figcaption { display: flex; align-items: center; gap: 12px; margin-top: auto; border-top: 1px solid var(--line); padding-top: 14px; }
+    
+    .depo-avatar-img {
+      width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--accent); flex: none; background: #070f1c;
+    }
+    .depo-avatar-img { box-shadow: 0 0 0 3px rgba(198,161,91,.10); }
+    .depo-info strong { display: block; font-size: 0.86rem; color: var(--primary-deep); }
+    html.dark .depo-info strong { color: #ffffff; }
+    .depo-info span { font-size: 0.72rem; color: var(--muted); }
+    .curtir {
+      margin-left: auto; border: 1px solid var(--line); background: var(--cream); border-radius: var(--radius-pill);
+      padding: 5px 12px; font-size: 0.75rem; color: var(--muted); transition: all 0.2s ease; cursor: pointer;
+    }
+    html.dark .curtir { background: var(--paper); }
+    .curtir:hover, .curtir[aria-pressed="true"] { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.08); }
+
+    /* SEÇÃO DE NOVO DEPOIMENTO SEPARADA */
+    .wave-divider { width: 100%; height: 50px; color: var(--cream); line-height: 0; }
+    html.dark .wave-divider { color: var(--paper-card); }
+    .wave-divider svg { width: 100%; height: 100%; fill: currentColor; }
+    .novo-depoimento-section { background: var(--cream); padding: 60px 0 80px; }
+    html.dark .novo-depoimento-section { background: var(--paper-card); }
+    .novo-depo-card {
+      max-width: 720px; margin: auto; background: var(--paper-card); border: 1px solid var(--line);
+      border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-lg);
+    }
+    html.dark .novo-depo-card { background: var(--paper); }
+    .novo-depo-card h3 { font: 600 1.6rem var(--serif); color: var(--primary-deep); margin-bottom: 6px; text-align: center; }
+    html.dark .novo-depo-card h3 { color: #ffffff; }
+    .novo-depo-card p { text-align: center; color: var(--muted); font-size: 0.88rem; margin-bottom: 24px; }
+
+    /* ===== 12. PERGUNTAS FREQUENTES (FAQ) ===== */
+    .faq { background: var(--paper); }
+    .faq-lista { max-width: 800px; margin: auto; display: grid; gap: 12px; }
+    .faq details { background: var(--paper-card); border: 1px solid var(--line); border-radius: var(--radius-md); transition: all 0.3s ease; }
+    .faq details[open] { border-color: var(--accent); box-shadow: var(--shadow); }
+    .faq summary {
+      cursor: pointer; list-style: none; padding: 18px 24px; font: 600 1.05rem var(--serif); color: var(--primary-deep);
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    }
+    html.dark .faq summary { color: #ffffff; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; color: var(--accent-dark); font-size: 1.4rem; font-family: var(--sans); transition: transform 0.3s ease; }
+    html.dark .faq summary::after { color: var(--accent-light); }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .faq details p { margin: 0; padding: 0 24px 20px; color: var(--muted); font-size: 0.92rem; line-height: 1.65; }
+
+    /* ===== 13. SIMULADOR DE PROJETO ===== */
+    .simulador { background: var(--cream); }
+    .simulador { padding-bottom: 34px; }
+    html.dark .simulador { background: var(--paper); }
+    .sim-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 60px; align-items: center; }
+    .sim-card { background: var(--paper-card); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-lg); display: grid; gap: 20px; }
+    .sim-card fieldset { border: 0; padding: 0; margin: 0; }
+    .sim-card legend, .sim-campo label { font-size: 0.78rem; font-weight: 700; color: var(--primary-deep); margin-bottom: 10px; display: block; }
+    html.dark .sim-card legend, html.dark .sim-campo label { color: var(--accent-light); }
+    .sim-servicos { display: flex; flex-wrap: wrap; gap: 8px; }
+    #nivel { width: 100%; accent-color: var(--accent); height: 6px; cursor: pointer; }
+    .sim-extra { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--ink); cursor: pointer; }
+    html.dark .sim-extra { color: #ffffff; }
+    .sim-extra input { accent-color: var(--accent); width: 16px; height: 16px; }
+    .sim-resultado { background: var(--primary-deep); color: #ffffff; border-radius: var(--radius-md); padding: 20px 24px; border: 1px solid var(--accent); }
+    .sim-resultado small { display: block; color: var(--accent-light); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+    .sim-resultado strong { display: block; font: 700 1.9rem/1.2 var(--serif); color: #ffffff; }
+
+    /* ===== 14. CONTATO ===== */
+    .contact { background: var(--paper); }
+    .contact { padding-top: 34px; }
+    .contact-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 60px; align-items: start; }
+    .contact-photo {
+      margin-top: 22px; border-radius: var(--radius-md); overflow: hidden;
+      border: 1px solid var(--line); box-shadow: var(--shadow);
+    }
+    .contact-photo img { width: 100%; height: 185px; object-fit: cover; }
+    .contact-detail { margin-top: 20px; }
+    .contact-detail div { padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .contact-detail small { display: block; color: var(--accent-dark); font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
+    html.dark .contact-detail small { color: var(--accent-light); }
+    .contact-detail strong { font-size: 0.92rem; color: var(--primary-deep); }
+    html.dark .contact-detail strong { color: #ffffff; }
+    .contact-form { background: var(--paper-card); padding: 36px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--primary-deep); margin-bottom: 6px; }
+    html.dark .field label { color: var(--accent-light); }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+      background: var(--paper); outline: none; font-size: 0.88rem; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    html.dark .field input, html.dark .field select, html.dark .field textarea { color: #ffffff; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(198, 161, 91, 0.2); }
+    .field textarea { min-height: 110px; resize: vertical; }
+
+    /* ===== 15. RODAPÉ ENXUTO ===== */
+    footer { background: var(--primary-deep); color: #ffffff; padding: 55px 0 25px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+    .footer-top { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; padding-bottom: 36px; }
+    .footer-brand p { max-width: 300px; color: rgba(255, 255, 255, 0.65); font-size: 0.82rem; margin-top: 12px; }
+    .footer-links { display: flex; gap: 50px; flex-wrap: wrap; }
+    .footer-col strong { display: block; color: var(--accent-light); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; }
+    .footer-col a { display: block; color: rgba(255, 255, 255, 0.75); font-size: 0.8rem; margin: 8px 0; transition: color 0.2s ease; }
+    .footer-col a:hover { color: var(--accent-light); }
+    .social { display: flex; gap: 8px; }
+    .social a { width: 36px; height: 36px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: grid; place-items: center; font-size: 0.85rem; transition: all 0.25s ease; }
+    .social a:hover { background: var(--accent); color: var(--primary-deep); border-color: var(--accent); transform: translateY(-2px); }
+    .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; display: flex; justify-content: space-between; color: rgba(255, 255, 255, 0.5); font-size: 0.72rem; }
+
+    /* ===== MODAL DE SERVIÇOS E PROJETOS ===== */
+    dialog {
+      border: 0; padding: 0; border-radius: var(--radius-lg); background: var(--paper-card);
+      color: var(--ink); box-shadow: var(--shadow-lg); width: min(800px, 94vw); max-height: 90vh; overflow: auto;
+    }
+    html.dark dialog { color: #ffffff; }
+    dialog::backdrop { background: rgba(5, 13, 24, 0.78); backdrop-filter: blur(8px); }
+    dialog[open] { animation: fadeIn 0.3s ease; }
+    .modal-banner { width: 100%; height: 210px; object-fit: cover; }
+    .modal-head { position: relative; background: var(--primary-deep); color: #ffffff; padding: 26px 30px; }
+    .modal-head h3 { font: 600 1.8rem var(--serif); color: #ffffff; margin-top: 4px; }
+    .modal-head small { color: var(--accent-light); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(5, 13, 24, 0.7); border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff; font-size: 1.1rem; display: grid; place-items: center; cursor: pointer; z-index: 5;
+    }
+    .modal-close:hover { background: var(--accent); color: var(--primary-deep); }
+    .modal-tabs { display: flex; border-bottom: 1px solid var(--line); background: var(--cream); padding: 0 20px; overflow-x: auto; }
+    html.dark .modal-tabs { background: var(--paper); }
+    .modal-tab-btn { padding: 14px 16px; font-weight: 700; font-size: 0.78rem; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
+    .modal-tab-btn.active { color: var(--accent-dark); border-bottom-color: var(--accent); }
+    html.dark .modal-tab-btn.active { color: var(--accent-light); }
+    .modal-body { padding: 30px; }
+    .modal-tab-content { display: none; }
+    .modal-tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    .modal-checklist { list-style: none; display: grid; gap: 10px; margin: 14px 0; font-size: 0.9rem; }
+    .modal-checklist li { display: flex; align-items: flex-start; gap: 10px; }
+    .modal-checklist li i { color: var(--teal); margin-top: 3px; }
+    .modal-footer { padding: 20px 30px 30px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); }
+
+    /* DIAGNÓSTICO INTERATIVO DENTRO DO MODAL */
+    .diag-box { background: var(--cream); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--line); }
+    html.dark .diag-box { background: var(--paper); }
+    .diag-opt { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .diag-opt button { border: 1px solid var(--line); padding: 7px 14px; border-radius: var(--radius-pill); font-size: 0.78rem; background: var(--paper-card); font-weight: 600; cursor: pointer; }
+    html.dark .diag-opt button { color: #ffffff; }
+    .diag-opt button.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+    html.dark .diag-opt button.active { background: var(--accent); color: var(--primary-deep); }
+
+    /* TOAST & BACK TO TOP */
+    .toast {
+      position: fixed; right: 20px; bottom: 20px; z-index: 1000; background: var(--primary-deep);
+      color: #ffffff; padding: 14px 20px; border-left: 4px solid var(--accent); border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg); font-size: 0.85rem; transform: translateY(120px); opacity: 0; transition: all 0.35s ease; max-width: 340px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .back-top {
+      position: fixed; right: 20px; bottom: 20px; width: 40px; height: 40px; border-radius: 50%;
+      background: var(--accent); color: var(--primary-deep); border: 0; cursor: pointer; z-index: 50;
+      opacity: 0; pointer-events: none; transition: all 0.25s ease; font-size: 1rem; display: grid; place-items: center; box-shadow: var(--shadow);
+    }
+    .back-top.visible { opacity: 1; pointer-events: auto; }
+    .back-top:hover { transform: translateY(-3px); }
+
+    /* PALETA FLUTUANTE */
+    .paleta { position: fixed; left: 20px; bottom: 20px; z-index: 70; display: flex; align-items: center; gap: 8px; }
+    .paleta-abre {
+      width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent); background: var(--primary-deep);
+      color: #ffffff; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-lg); transition: transform 0.3s ease;
+    }
+    .paleta-abre:hover { transform: rotate(-20deg) scale(1.05); }
+    .paleta-opcoes { display: flex; gap: 6px; background: var(--paper-card); padding: 6px 10px; border-radius: var(--radius-pill); box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .paleta-opcoes[hidden] { display: none; }
+    .paleta-opcoes button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ffffff; cursor: pointer; transition: transform 0.2s ease; }
+    .paleta-opcoes button:hover { transform: scale(1.2); }
+
+    /* ANIMAÇÃO REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* ===== OVERLAYS EASTER EGGS ===== */
+    #matrix-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(5, 13, 24, 0.95); display: none; flex-direction: column; justify-content: space-between; padding: 20px; }
+    #matrix-overlay.active { display: flex; }
+    #matrix-canvas { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+    .matrix-top { position: relative; z-index: 2; display: flex; justify-content: space-between; color: #10b981; font-family: var(--mono); font-size: 0.85rem; }
+
+    #dev-console { position: fixed; inset: 0; z-index: 2000; background: rgba(5, 13, 24, 0.85); backdrop-filter: blur(8px); display: none; place-items: center; padding: 20px; }
+    #dev-console.active { display: grid; }
+    .console-box { width: min(680px, 95vw); background: #091322; border: 1px solid rgba(198, 161, 91, 0.4); border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); font-family: var(--mono); color: #10b981; }
+    .console-head { background: #050d18; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: var(--accent-light); font-size: 0.78rem; }
+    .console-body { padding: 18px; height: 280px; overflow-y: auto; font-size: 0.82rem; line-height: 1.6; }
+    .console-input-wrap { display: flex; gap: 8px; padding: 12px 18px; background: #050d18; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+    .console-input-wrap input { background: transparent; border: 0; outline: none; color: #ffffff; flex: 1; font-family: var(--mono); font-size: 0.82rem; }
+
+    #bug-game { position: fixed; inset: 0; z-index: 2000; background: rgba(5, 13, 24, 0.85); backdrop-filter: blur(8px); display: none; place-items: center; padding: 20px; }
+    #bug-game.active { display: grid; }
+    .bug-box { width: min(500px, 90vw); background: var(--paper-card); border-radius: var(--radius-lg); padding: 30px; text-align: center; box-shadow: var(--shadow-lg); }
+    html.dark .bug-box { background: var(--paper); color: #ffffff; }
+    .bug-arena { width: 100%; height: 220px; background: var(--cream); border-radius: var(--radius-md); margin: 16px 0; position: relative; overflow: hidden; border: 1px solid var(--line); }
+    html.dark .bug-arena { background: var(--primary-deep); }
+    .bug-target { position: absolute; font-size: 1.8rem; cursor: pointer; user-select: none; transition: transform 0.1s ease; }
+    .bug-target:hover { transform: scale(1.2); }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 980px) {
+      .hero-grid, .about-grid, .contact-grid, .sim-grid, .dif { grid-template-columns: 1fr; gap: 40px; }
+      .service-grid, .dep-painel, .pilares, .etapas { grid-template-columns: 1fr; }
+      .process-detail-box { grid-template-columns: 1fr; }
+      .nav-links {
+        position: fixed; inset: 58px 0 auto; background: var(--paper-card); padding: 24px;
+        flex-direction: column; align-items: stretch; border-bottom: 1px solid var(--line);
+        box-shadow: var(--shadow-lg); transform: translateY(-150%); transition: transform 0.35s ease;
+      }
+      .nav-links.open { transform: translateY(0); }
+      .menu-toggle { display: block; }
+      .form-row { grid-template-columns: 1fr; }
+      .etapas::before { display: none; }
+    }
+  
+    @media (max-width: 900px) {
+    }
+    @media (max-width: 640px) {
+      .nav-full-index { position:fixed; top:68px; right:16px; width:min(300px, calc(100vw - 32px)); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== 1. CABEÇALHO COMPACTO (~58px) ===== -->
+  <header>
+    <div class="container nav-wrap">
+      <!-- LOGO GEOMÉTRICO DUPLO ANEL -->
+      <a class="brand" href="#inicio" id="logo-emblem" aria-label="TechConnect — Início">
+        <span class="brand-mark">T</span>
+        <span>TechConnect<small>TECNOLOGIA COM PROPÓSITO</small></span>
+      </a>
+
+      <!-- MENU DE NAVEGAÇÃO COMPACTO (EXATAMENTE 5 TÓPICOS) -->
+      <nav class="nav-links" id="nav-links" aria-label="Navegação principal">
+        <a href="#sobre">Empresa</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#projetos">Projetos</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#simulador">Simulador</a>
+      </nav>
+
+      <!-- AÇÕES COMPACTAS -->
+      <div class="nav-actions">
+        <div class="nav-more-wrap">
+          <button class="nav-more" id="nav-more-toggle" type="button" aria-label="Abrir sumário completo" aria-expanded="false" aria-controls="nav-full-index" title="Sumário completo">⋯</button>
+          <div class="nav-full-index" id="nav-full-index" hidden>
+            <div class="nav-index-heading"><span>SUMÁRIO COMPLETO</span><button type="button" id="nav-more-close" aria-label="Fechar sumário">×</button></div>
+            <a href="#inicio">Início</a>
+            <a href="#sobre">Empresa</a>
+            <a href="#proposito">Missão, visão e valores</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#processo">Como trabalhamos</a>
+            <a href="#projetos">Projetos e portfólio</a>
+            <a href="#diferenciais">Nosso diferencial</a>
+            <a href="#depoimentos">Depoimentos</a>
+            <a href="#novo-depoimento">Enviar depoimento</a>
+            <a href="#duvidas">Perguntas frequentes</a>
+            <a href="#simulador">Simulador de orçamento</a>
+            <a href="#contato">Contato</a>
+          </div>
+        </div>
+        <button class="btn-icon" id="theme-toggle" aria-label="Alternar modo claro/escuro" title="Alternar tema">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <a class="nav-cta" href="#contato">Vamos conversar ↗</a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- ===== 2. BANNER PRINCIPAL COM GRÁFICO VETORIAL DE ALTA PERFORMANCE (100% ORIGINAL & INTACTO) ===== -->
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div class="hero-inner">
+          <span class="eyebrow">Tecnologia pensada para pessoas</span>
+          <h1 id="hero-title" title="Dê 3 cliques para uma surpresa!">Ideias que ganham <em>forma e movimento.</em></h1>
+          <p class="hero-desc">Sites, suporte técnico, manutenção e consultoria digital com acompanhamento de perto e linguagem simples para o seu negócio evoluir em todo o Brasil.</p>
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="#servicos">Conheça nossos serviços ↗</a>
+            <a class="btn btn-ghost" href="#sobre">Descubra a TechConnect</a>
+          </div>
+        </div>
+
+        <!-- CARD ORIGINAL NAVEGADOR COM INTERFACE VETORIAL COMPLETA, NÓS ILUMINADOS E CARDS FLUTUANTES -->
+        <div class="hero-visual" id="palco-hero">
+          <div class="forma f1"></div>
+          <div class="forma f2"></div>
+          <div class="forma f3"></div>
+
+          <div class="hero-svg-card">
+            <div class="browser-bar">
+              <span class="browser-dot"></span>
+              <span class="browser-dot"></span>
+              <span class="browser-dot"></span>
+              <span class="browser-address">https://techconnect.com.br</span>
+            </div>
+
+            <div class="hero-svg-content">
+              <!-- SVG ORIGINAL COMPLETO DO BANNER HERO: GRADE DOURADA, CURVA DE CRESCIMENTO E NÓS TEAL/OURO -->
+              <svg viewBox="0 0 500 310" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                <defs>
+                  <linearGradient id="heroGradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#070f1c" />
+                    <stop offset="50%" stop-color="#0b192c" />
+                    <stop offset="100%" stop-color="#14243b" />
+                  </linearGradient>
+
+                  <linearGradient id="chartAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#c6a15b" stop-opacity="0.45" />
+                    <stop offset="80%" stop-color="#14b8a6" stop-opacity="0.1" />
+                    <stop offset="100%" stop-color="#0b192c" stop-opacity="0" />
+                  </linearGradient>
+
+                  <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#c6a15b" />
+                    <stop offset="50%" stop-color="#e6c88b" />
+                    <stop offset="100%" stop-color="#14b8a6" />
+                  </linearGradient>
+
+                  <filter id="glowGold" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                </defs>
+
+                <!-- Fundo Escuro Técnico -->
+                <rect width="500" height="310" fill="url(#heroGradBg)" />
+
+                <!-- Grade Ortogonal em Tom Dourado Suave -->
+                <g stroke="#c6a15b" stroke-opacity="0.08" stroke-width="1">
+                  <line x1="0" y1="50" x2="500" y2="50" />
+                  <line x1="0" y1="100" x2="500" y2="100" />
+                  <line x1="0" y1="150" x2="500" y2="150" />
+                  <line x1="0" y1="200" x2="500" y2="200" />
+                  <line x1="0" y1="250" x2="500" y2="250" />
+                  
+                  <line x1="80" y1="0" x2="80" y2="310" />
+                  <line x1="160" y1="0" x2="160" y2="310" />
+                  <line x1="240" y1="0" x2="240" y2="310" />
+                  <line x1="320" y1="0" x2="320" y2="310" />
+                  <line x1="400" y1="0" x2="400" y2="310" />
+                  <line x1="480" y1="0" x2="480" y2="310" />
+                </g>
+
+                <!-- Área Preenchida do Gráfico de Desempenho -->
+                <path d="M 40,240 Q 110,210 180,160 T 320,110 T 460,50 L 460,270 L 40,270 Z" fill="url(#chartAreaGrad)" />
+
+                <!-- Linha Principal de Crescimento Otimizado -->
+                <path d="M 40,240 Q 110,210 180,160 T 320,110 T 460,50" fill="none" stroke="url(#lineGrad)" stroke-width="3.5" filter="url(#glowGold)" stroke-linecap="round" />
+
+                <!-- Pontos / Nós de Conexão com Anéis Iluminados -->
+                <circle cx="40" cy="240" r="5" fill="#070f1c" stroke="#c6a15b" stroke-width="2.5" />
+                <circle cx="110" cy="210" r="5" fill="#070f1c" stroke="#c6a15b" stroke-width="2.5" />
+                <circle cx="180" cy="160" r="5" fill="#070f1c" stroke="#e6c88b" stroke-width="2.5" />
+                <circle cx="250" cy="135" r="5" fill="#070f1c" stroke="#14b8a6" stroke-width="2.5" />
+                <circle cx="320" cy="110" r="5" fill="#070f1c" stroke="#14b8a6" stroke-width="2.5" />
+                <circle cx="390" cy="75" r="5" fill="#070f1c" stroke="#14b8a6" stroke-width="2.5" />
+                <circle cx="460" cy="50" r="7" fill="#14b8a6" stroke="#ffffff" stroke-width="2" filter="url(#glowGold)" />
+
+                <!-- UI Card Flutuante 1: Métricas de Velocidade -->
+                <g transform="translate(30, 35)">
+                  <rect width="130" height="52" rx="8" fill="#050d18" fill-opacity="0.9" stroke="#c6a15b" stroke-opacity="0.3" stroke-width="1" />
+                  <text x="14" y="22" fill="#e6c88b" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">PERFORMANCE</text>
+                  <text x="14" y="40" fill="#ffffff" font-family="'DM Sans', sans-serif" font-size="14" font-weight="700">99.8% SLA</text>
+                  <circle cx="108" cy="28" r="8" fill="#14b8a6" fill-opacity="0.2" />
+                  <circle cx="108" cy="28" r="4" fill="#14b8a6" />
+                </g>
+
+                <!-- UI Card Flutuante 2: Segurança Ativa -->
+                <g transform="translate(320, 185)">
+                  <rect width="150" height="58" rx="8" fill="#050d18" fill-opacity="0.92" stroke="#14b8a6" stroke-opacity="0.4" stroke-width="1" />
+                  <text x="14" y="22" fill="#14b8a6" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">PROTEÇÃO ATIVA</text>
+                  <text x="14" y="42" fill="#ffffff" font-family="'DM Sans', sans-serif" font-size="12" font-weight="600">LGPD & Backup Ok</text>
+                  <path d="M 125,22 L 133,26 L 133,35 C 133,40 125,44 125,44 C 125,44 117,40 117,35 L 117,26 Z" fill="none" stroke="#c6a15b" stroke-width="1.5" />
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="hero-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div>
+              <strong>Engenharia & Cuidado</strong>
+              <span>Acompanhamento pós-entrega</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. FAIXA DE ESTATÍSTICAS ===== -->
+    <section class="stats" aria-label="A TechConnect em números">
+      <div class="container stats-grid">
+        <div class="stats-item">
+          <strong data-alvo="9500" data-sufixo="+">0</strong>
+          <span>Projetos entregues com excelência</span>
+        </div>
+        <div class="stats-item clickable" id="stat-25anos" title="Dê 2 cliques para abrir a Cápsula do Tempo!">
+          <strong data-alvo="25" data-sufixo="+">0</strong>
+          <span>Anos de experiência contínua</span>
+        </div>
+        <div class="stats-item">
+          <strong>99%+</strong>
+          <span>Mais de 99% de clientes satisfeitos e acompanhados</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5. SOBRE A EMPRESA ===== -->
+    <section class="sobre" id="sobre">
+      <div class="container about-grid">
+        <div class="about-visual reveal">
+          <!-- ILUSTRAÇÃO VETORIAL EDITORIAL DO ESTÚDIO DE TECNOLOGIA -->
+          <img id="img-sobre" src="" alt="Equipe de especialistas trabalhando juntos em estúdio de tecnologia moderno">
+          <div class="about-stamp">
+            <strong>25+ Anos</strong>
+            <span>Traduzindo complexidade em simplicidade com excelência.</span>
+          </div>
+        </div>
+
+        <div class="about-text reveal">
+          <span class="eyebrow">Quem somos</span>
+          <h2 class="section-title">Tecnologia com essência. Resultados com propósito.</h2>
+          <p>A TechConnect nasceu da convicção de que a tecnologia deve simplificar a rotina, aproximar pessoas e impulsionar oportunidades de negócios de forma sustentável.</p>
+          <p>Unimos alta capacitação técnica e escuta atenta para desenvolver projetos sob medida que respeitam a identidade de cada parceiro em todo o país.</p>
+
+          <ul class="about-fatos">
+            <li><i class="fa-solid fa-check"></i> Escutamos antes de propor a solução</li>
+            <li><i class="fa-solid fa-check"></i> Comunicação clara e sem termos difíceis</li>
+            <li><i class="fa-solid fa-check"></i> Acompanhamento técnico contínuo pós-entrega</li>
+          </ul>
+
+          <a class="btn btn-navy" href="#proposito">Conheça o que nos move ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. MISSÃO, VISÃO E VALORES ===== -->
+    <section class="proposito" id="proposito">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Missão, visão e valores</span>
+          <h2 class="section-title">O que nos move todos os dias.</h2>
+          <p class="section-copy">Estes três pilares explicam como trabalhamos e por que entregamos projetos com alto índice de aprovação.</p>
+        </div>
+
+        <div class="pilares reveal">
+          <article class="pilar">
+            <div class="pilar-thumb">
+              <img id="img-missao" src="" alt="Ilustração conceitual da Missão TechConnect" loading="lazy">
+            </div>
+            <div class="pilar-corpo">
+              <div class="pilar-icon"><i class="fa-solid fa-bullseye"></i></div>
+              <h3>Missão</h3>
+              <p class="pilar-lema">Simplificar o digital.</p>
+              <p>Existimos para que negócios de qualquer porte utilizem a tecnologia com autonomia e tranquilidade, sem complicações operacionais.</p>
+              <ul>
+                <li>Explicar antes de executar</li>
+                <li>Cumprir prazos com exatidão</li>
+                <li>Treinar o cliente para autogestão</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="pilar">
+            <div class="pilar-thumb">
+              <img id="img-visao" src="" alt="Ilustração conceitual da Visão TechConnect" loading="lazy">
+            </div>
+            <div class="pilar-corpo">
+              <div class="pilar-icon"><i class="fa-solid fa-eye"></i></div>
+              <h3>Visão</h3>
+              <p class="pilar-lema">Conectar possibilidades.</p>
+              <p>Ser referência em soluções acessíveis e de alta confiabilidade, crescendo junto com nossos parceiros através da inovação consciente.</p>
+              <ul>
+                <li>Construir relações de longo prazo</li>
+                <li>Crescimento sustentável</li>
+                <li>Disseminar boas práticas de segurança</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="pilar">
+            <div class="pilar-thumb">
+              <img id="img-valores" src="" alt="Ilustração conceitual dos Valores TechConnect" loading="lazy">
+            </div>
+            <div class="pilar-corpo">
+              <div class="pilar-icon"><i class="fa-solid fa-gem"></i></div>
+              <h3>Valores</h3>
+              <p class="pilar-lema">Ética e excelência.</p>
+              <p>Princípios inegociáveis que norteiam cada chamada técnica, cada linha de código e cada reunião com nossos clientes.</p>
+              <ul>
+                <li>Transparência total nos custos</li>
+                <li>Respeito e escuta ativa</li>
+                <li>Cuidado aos detalhes e segurança</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 7. SERVIÇOS ===== -->
+    <section class="services" id="servicos">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">O que fazemos</span>
+          <h2 class="section-title">Cada serviço, um jeito de pôr<br>a sua ideia em movimento.</h2>
+          <p class="section-copy">Conheça nossas quatro frentes estratégicas de atuação. Clique em "Saiba mais ↗" para abrir os detalhes completos, cronograma e diagnóstico.</p>
+        </div>
+
+        <div class="service-grid reveal">
+          <!-- CARD SERVIÇO 1 -->
+          <article class="service-card">
+            <div class="thumb">
+              <img id="img-srv-sites" src="" alt="Desenvolvimento de sites profissionais" loading="lazy">
+            </div>
+            <div class="corpo">
+              <h3>Desenvolvimento de sites</h3>
+              <p>Plataformas institucionais, e-commerces e portais responsivos com design elegante, SEO otimizado e painel intuitivo de edição.</p>
+              <button class="card-link" onclick="abreModalServico('sites')">Saiba mais <span>↗</span></button>
+            </div>
+          </article>
+
+          <!-- CARD SERVIÇO 2 -->
+          <article class="service-card">
+            <div class="thumb">
+              <img id="img-srv-suporte" src="" alt="Suporte técnico especializado" loading="lazy">
+            </div>
+            <div class="corpo">
+              <h3>Suporte técnico</h3>
+              <p>Atendimento remoto ágil e presencial técnico para resolver problemas de infraestrutura de rede, servidores e estação de trabalho.</p>
+              <button class="card-link" onclick="abreModalServico('suporte')">Saiba mais <span>↗</span></button>
+            </div>
+          </article>
+
+          <!-- CARD SERVIÇO 3 -->
+          <article class="service-card">
+            <div class="thumb">
+              <img id="img-srv-manutencao" src="" alt="Manutenção de computadores e hardware" loading="lazy">
+            </div>
+            <div class="corpo">
+              <h3>Manutenção de computadores</h3>
+              <p>Diagnóstico completo, substituição de peças, upgrade de memória e SSD, limpeza interna e planos de prevenção para empresas.</p>
+              <button class="card-link" onclick="abreModalServico('manutencao')">Saiba mais <span>↗</span></button>
+            </div>
+          </article>
+
+          <!-- CARD SERVIÇO 4 -->
+          <article class="service-card">
+            <div class="thumb">
+              <img id="img-srv-consultoria" src="" alt="Consultoria digital estratégica" loading="lazy">
+            </div>
+            <div class="corpo">
+              <h3>Consultoria em soluções digitais</h3>
+              <p>Mapeamento estratégico de processos, automação, adequação de segurança e migração para nuvem com foco em retorno de investimento.</p>
+              <button class="card-link" onclick="abreModalServico('consultoria')">Saiba mais <span>↗</span></button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 8. PROCESSO (COMO TRABALHAMOS) ===== -->
+    <section class="processo" id="processo">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Como trabalhamos</span>
+          <h2 class="section-title">Um caminho claro,<br>da primeira conversa ao resultado.</h2>
+          <p class="section-copy">Nosso fluxo de quatro etapas garante clareza de escopo, entregas pontuais e previsibilidade orçamentária.</p>
+        </div>
+
+        <div class="etapas reveal">
+          <div class="etapa active" onclick="mostraEtapa(1, this)">
+            <div class="etapa-num">1</div>
+            <h3>Escuta & Diagnóstico</h3>
+            <p>Entendemos as necessidades reais e mapeamos os requisitos da operação.</p>
+            <small>1 a 2 dias</small>
+          </div>
+
+          <div class="etapa" onclick="mostraEtapa(2, this)">
+            <div class="etapa-num">2</div>
+            <h3>Plano & Protótipo</h3>
+            <p>Desenhamos a arquitetura visual e técnica com orçamento fechado.</p>
+            <small>2 a 5 dias</small>
+          </div>
+
+          <div class="etapa" onclick="mostraEtapa(3, this)">
+            <div class="etapa-num">3</div>
+            <h3>Construção Ágil</h3>
+            <p>Execução em entregas curtas para testes e homologação.</p>
+            <small>2 a 6 semanas</small>
+          </div>
+
+          <div class="etapa" onclick="mostraEtapa(4, this)">
+            <div class="etapa-num">4</div>
+            <h3>Lançamento & Suporte</h3>
+            <p>Publicação com treinamento de equipe e acompanhamento contínuo.</p>
+            <small>Sem prazo final</small>
+          </div>
+        </div>
+
+        <!-- PAINEL DETALHADO DO PROCESSO COM ILUSTRAÇÃO DINÂMICA -->
+        <div class="process-detail-box reveal" id="process-detail">
+          <img id="proc-img" src="" alt="Etapa 1: Escuta e Diagnóstico">
+          <div>
+            <h4 id="proc-titulo">Etapa 1: Escuta & Diagnóstico</h4>
+            <p id="proc-desc">Reunião inicial sem compromisso para análise do contexto da sua empresa, identificação dos gargalos e especificação inicial do escopo do projeto.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 9. PORTFÓLIO DE PROJETOS ===== -->
+    <section class="projetos" id="projetos">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Portfólio de projetos</span>
+          <h2 class="section-title">Do rascunho ao movimento.</h2>
+          <p class="section-copy">Confira uma seleção de nossos trabalhos em desenvolvimento web, aplicativos e infraestrutura digital.</p>
+        </div>
+
+        <div class="proj-barra">
+          <div class="filtros" role="group" aria-label="Filtrar projetos">
+            <button class="chip active" data-filtro="todos">Todos os projetos</button>
+            <button class="chip" data-filtro="web">Sites & Plataformas</button>
+            <button class="chip" data-filtro="app">Apps & Painéis</button>
+            <button class="chip" data-filtro="infra">Infraestrutura</button>
+          </div>
+          <input class="busca" id="busca-proj" type="search" placeholder="Buscar projeto pelo nome..." aria-label="Buscar projetos">
+        </div>
+
+        <div class="portfolio-grid" id="portfolio-container">
+          <!-- Inserido dinamicamente via JS (24 ilustrações temáticas de projetos) -->
+        </div>
+
+        <div class="proj-rodape">
+          <p id="proj-contagem" style="margin-bottom: 14px;"></p>
+          <div id="proj-toggle-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 10. DIFERENCIAIS ===== -->
+    <section class="manifesto" id="diferenciais">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Nosso diferencial</span>
+          <h2 class="section-title">Tecnologia com acompanhamento de verdade.</h2>
+          <p class="section-copy">Mais do que entregar uma solução, acompanhamos cada etapa para que a tecnologia faça sentido na rotina e nos objetivos do seu negócio.</p>
+        </div>
+
+        <div class="dif reveal">
+          <div class="dif-abas" role="tablist">
+            <button class="aba" role="tab" id="dtab-0" aria-selected="true" onclick="trocaDif(0)"><i class="fa-solid fa-eye"></i>Transparência Total</button>
+            <button class="aba" role="tab" id="dtab-1" aria-selected="false" onclick="trocaDif(1)"><i class="fa-solid fa-sliders"></i>Solução Sob Medida</button>
+            <button class="aba" role="tab" id="dtab-2" aria-selected="false" onclick="trocaDif(2)"><i class="fa-solid fa-headset"></i>Suporte Contínuo</button>
+            <button class="aba" role="tab" id="dtab-3" aria-selected="false" onclick="trocaDif(3)"><i class="fa-solid fa-shield-halved"></i>Segurança & Acessibilidade</button>
+          </div>
+
+          <div>
+            <article class="dif-painel" id="dpainel-0">
+              <img id="img-dif-0" class="dif-painel-img" src="" alt="Planejamento financeiro e cronograma transparente" loading="lazy">
+              <h3>Você acompanha tudo, sem surpresas</h3>
+              <p>Prazos, etapas e custos bem explicados desde a proposta inicial. Nada de letras miúdas na entrega.</p>
+              <ul>
+                <li>Orçamento detalhado por fases</li>
+                <li>Relatórios periódicos de avanço</li>
+                <li>Atendimento direto com especialistas</li>
+              </ul>
+              <strong>98%</strong> <small>de entregas rigorosamente dentro do prazo</small>
+              <div class="medidor" style="--v:98%"><i></i></div>
+            </article>
+
+            <article class="dif-painel" id="dpainel-1" hidden>
+              <img id="img-dif-1" class="dif-painel-img" src="" alt="Desenvolvimento personalizado para cada cliente" loading="lazy">
+              <h3>Nenhum projeto nasce de um molde genérico</h3>
+              <p>Estudamos seu fluxo de trabalho para projetar a solução exata que se ajusta ao seu orçamento.</p>
+              <ul>
+                <li>Entrevista imersiva inicial</li>
+                <li>Identidade visual respeitada</li>
+                <li>Escalabilidade para o futuro</li>
+              </ul>
+              <strong>96%</strong> <small>de aprovação na primeira apresentação de protótipo</small>
+              <div class="medidor" style="--v:96%"><i></i></div>
+            </article>
+
+            <article class="dif-painel" id="dpainel-2" hidden>
+              <img id="img-dif-2" class="dif-painel-img" src="" alt="Equipe de suporte técnico contínuo" loading="lazy">
+              <h3>A entrega do projeto é apenas o começo</h3>
+              <p>Permanecemos ao seu lado com manutenção preventiva, treinamentos de equipe e atualizações de segurança.</p>
+              <ul>
+                <li>Canais diretos de suporte remoto</li>
+                <li>Tempo de resposta rápido em chamados</li>
+                <li>Treinamento completo de uso</li>
+              </ul>
+              <strong>99%+</strong> <small>dos chamados solucionados com agilidade</small>
+              <div class="medidor" style="--v:99.5%"><i></i></div>
+            </article>
+
+            <article class="dif-painel" id="dpainel-3" hidden>
+              <img id="img-dif-3" class="dif-painel-img" src="" alt="Segurança cibernética e proteção de dados" loading="lazy">
+              <h3>Proteção de dados e acessibilidade universal</h3>
+              <p>Desenvolvemos seguindo normas internacionais de acessibilidade (WCAG) e conformidade com a LGPD.</p>
+              <ul>
+                <li>Backups automatizados e criptografia</li>
+                <li>Navegação por leitores de tela e teclado</li>
+                <li>Contraste tipográfico testado</li>
+              </ul>
+              <strong>100%</strong> <small>dos sistemas entregues com conformidade de segurança</small>
+              <div class="medidor" style="--v:100%"><i></i></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PERSONALIZE SEU AVATAR — SEM LOGIN ===== -->
+    
+
+    <!-- ===== 13. SIMULADOR DE PROJETO ===== -->
+    <section class="simulador" id="simulador">
+      <div class="container sim-grid">
+        <div class="sim-texto reveal">
+          <span class="eyebrow">Simulador interativo</span>
+          <h2 class="section-title">Calcule a estimativa para a sua necessidade.</h2>
+          <p class="section-copy">Escolha a frente de serviço, defina o porte do projeto e selecione os adicionais desejados. A estimativa atualiza na hora!</p>
+        </div>
+
+        <form class="sim-card reveal" id="sim-form" onsubmit="return false">
+          <fieldset>
+            <legend>1. Qual o serviço principal?</legend>
+            <div class="sim-servicos">
+              <button class="chip active" type="button" data-sim="sites" onclick="selecionaSimServico(this, 'sites')">Site / Sistema</button>
+              <button class="chip" type="button" data-sim="suporte" onclick="selecionaSimServico(this, 'suporte')">Suporte Técnico</button>
+              <button class="chip" type="button" data-sim="manutencao" onclick="selecionaSimServico(this, 'manutencao')">Manutenção</button>
+              <button class="chip" type="button" data-sim="consultoria" onclick="selecionaSimServico(this, 'consultoria')">Consultoria</button>
+            </div>
+          </fieldset>
+
+          <div class="sim-campo">
+            <label for="nivel">2. Porte do projeto: <b id="nivel-txt">Médio</b></label>
+            <input id="nivel" type="range" min="1" max="5" value="3" oninput="calculaSimulacao()">
+          </div>
+
+          <fieldset>
+            <legend>3. Adicionais desejados</legend>
+            <label class="sim-extra"><input type="checkbox" data-valor="350" data-nome="prazo reduzido" onchange="calculaSimulacao()"> Entrega prioritária (+ R$ 350)</label>
+            <label class="sim-extra"><input type="checkbox" data-valor="280" data-nome="treinamento amplo" onchange="calculaSimulacao()"> Treinamento avançado de equipe (+ R$ 280)</label>
+            <label class="sim-extra"><input type="checkbox" data-valor="450" data-nome="suporte estendido" onchange="calculaSimulacao()"> 3 meses de suporte preventivo (+ R$ 450)</label>
+          </fieldset>
+
+          <div class="sim-resultado">
+            <small>Estimativa de investimento</small>
+            <strong id="sim-valor">R$ 0</strong>
+            <span id="sim-prazo" style="font-size:0.8rem; color:rgba(255,255,255,0.75);"></span>
+          </div>
+
+          <button class="btn btn-gold" type="button" onclick="enviarSimulacaoFormulario()">Usar esta simulação no contato <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+      </div>
+    </section>
+
+
+    <!-- ===== 11. DEPOIMENTOS DE CLIENTES ===== -->
+    <section class="testimonials" id="depoimentos">
+      <div class="container-wide">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Depoimentos reais</span>
+          <h2 class="section-title">O que dizem os nossos parceiros.</h2>
+          <p class="section-copy">Confira os comentários organizados por categoria de serviço. Selecione a aba desejada para explorar os depoimentos dos clientes.</p>
+        </div>
+
+        <!-- ABAS POR SERVIÇO (SEM ABA 'TODOS') -->
+        <div class="dep-abas reveal" role="tablist">
+          <button class="chip active" id="deptab-sites" onclick="trocaAbaDepoimentos('sites')"><i class="fa-solid fa-laptop-code"></i> Sites & Plataformas (6)</button>
+          <button class="chip" id="deptab-suporte" onclick="trocaAbaDepoimentos('suporte')"><i class="fa-solid fa-headset"></i> Suporte Técnico (6)</button>
+          <button class="chip" id="deptab-manutencao" onclick="trocaAbaDepoimentos('manutencao')"><i class="fa-solid fa-wrench"></i> Manutenção (6)</button>
+          <button class="chip" id="deptab-consultoria" onclick="trocaAbaDepoimentos('consultoria')"><i class="fa-solid fa-chart-pie"></i> Consultoria (6)</button>
+        </div>
+
+        <!-- GRID DE DEPOIMENTOS -->
+        <div id="depoimentos-grid-container" class="reveal">
+          <!-- Inserido dinamicamente via JS (24 depoimentos com retratos em ilustrações de avatar) -->
+        </div>
+
+        <div id="depoimentos-toggle-container" style="text-align: center; margin-top: 28px;" class="reveal"></div>
+      </div>
+    </section>
+
+    <!-- ONDA SEPARADORA -->
+    <div class="wave-divider" aria-hidden="true">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0 C150,90 350,-40 500,60 C650,160 900,10 1200,40 L1200,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+    <!-- SEÇÃO SEPARADA: DEIXE SEU DEPOIMENTO -->
+    <section class="novo-depoimento-section" id="novo-depoimento">
+      <div class="container">
+        <div class="novo-depo-card reveal">
+          <h3>Já é nosso cliente? Deixe seu depoimento</h3>
+          <p>Sua avaliação é fundamental para mantermos nossa busca diária por inovação e excelência.</p>
+
+          <form id="form-novo-depoimento" onsubmit="enviaNovoDepoimento(event)">
+            <div class="form-row">
+              <div class="field">
+                <label for="dep-nome">Seu Nome *</label>
+                <input id="dep-nome" type="text" placeholder="Ex: Mariana Costa" required minlength="3">
+              </div>
+              <div class="field">
+                <label for="dep-cargo">Cargo / Empresa *</label>
+                <input id="dep-cargo" type="text" placeholder="Ex: Diretora de Operações" required minlength="3">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="dep-servico">Serviço Utilizado *</label>
+                <select id="dep-servico" required>
+                  <option value="sites">Sites & Plataformas</option>
+                  <option value="suporte">Suporte Técnico</option>
+                  <option value="manutencao">Manutenção de Computadores</option>
+                  <option value="consultoria">Consultoria Digital</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="dep-estrelas">Avaliação *</label>
+                <select id="dep-estrelas" required>
+                  <option value="5">★★★★★ (5 Estrelas)</option>
+                  <option value="4">★★★★☆ (4 Estrelas)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="dep-texto">Seu Comentário *</label>
+              <textarea id="dep-texto" placeholder="Conte brevemente sobre sua experiência com o atendimento e entrega da TechConnect..." required minlength="10"></textarea>
+            </div>
+
+            <div style="text-align: center; margin-top: 10px;">
+              <button class="btn btn-gold" type="submit">Publicar depoimento <i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 12. PERGUNTAS FREQUENTES (FAQ) ===== -->
+    <section class="faq" id="duvidas">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Dúvidas frequentes</span>
+          <h2 class="section-title">O que mais nos perguntam.</h2>
+          <p class="section-copy">Respostas transparentes para as dúvidas mais comuns de nossos futuros parceiros.</p>
+        </div>
+
+        <div class="faq-lista reveal">
+          <details>
+            <summary>Como é definido o investimento em um projeto de site?</summary>
+            <p>O valor depende da complexidade do projeto, número de páginas e recursos integrados. Após a reunião de escopo, enviamos uma proposta detalhada com valor fixo e sem surpresas.</p>
+          </details>
+
+          <details>
+            <summary>O atendimento técnico pode ser feito remotamente?</summary>
+            <p>Sim. A grande maioria das chamadas de suporte técnico e consultorias são resolvidas remotamente com agilidade. Quando necessário, realizamos atendimento presencial agendado.</p>
+          </details>
+
+          <details>
+            <summary>Qual a garantia dos serviços de manutenção de computadores?</summary>
+            <p>Oferecemos 90 dias de garantia completa sobre os serviços de manutenção e sobre as peças eventualmente substituídas em nosso laboratório técnico.</p>
+          </details>
+
+          <details>
+            <summary>Terei facilidade para editar o site após a entrega?</summary>
+            <p>Sim! Entregamos a plataforma configurada com um painel de fácil utilização e realizamos uma sessão de treinamento completa para a sua equipe.</p>
+          </details>
+
+          <details>
+            <summary>Como funcionam as rotinas de backup e segurança?</summary>
+            <p>Implementamos rotinas automatizadas com criptografia avançada e retenção em nuvem, garantindo a proteção e pronta recuperação dos dados.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 14. CONTATO ===== -->
+    <section class="contact" id="contato">
+      <div class="container contact-grid">
+        <div class="contact-info reveal">
+          <span class="eyebrow">Vamos conversar</span>
+          <h2 class="section-title">Toda boa parceria começa com uma conversa.</h2>
+          <p>Conte-nos sobre a sua necessidade. Respondemos em até um dia útil com um diagnóstico inicial e orientações claras.</p>
+
+          <div class="contact-photo">
+            <img id="img-contato" src="" alt="Atendimento consultivo especializado da TechConnect" loading="lazy">
+          </div>
+
+          <div class="contact-detail">
+            <div>
+              <small>E-mail Comercial</small>
+              <strong>contato@techconnect.com.br</strong>
+            </div>
+            <div>
+              <small>Central de Atendimento</small>
+              <strong>0800 591 2026 / (31) 3333-2026</strong>
+            </div>
+            <div>
+              <small>Atendimento e Cobertura</small>
+              <strong>Atendimento Remoto e Presencial em Todo o Brasil</strong>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact-form reveal" id="contact-form" onsubmit="enviaFormularioContato(event)">
+          <div class="field">
+            <label for="nome">Seu Nome Completo *</label>
+            <input id="nome" type="text" placeholder="Como podemos chamar você?" required minlength="3">
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="email">E-mail Profissional *</label>
+              <input id="email" type="email" placeholder="seuemail@exemplo.com" required>
+            </div>
+            <div class="field">
+              <label for="assunto">Assunto do Projeto *</label>
+              <input id="assunto" type="text" placeholder="Ex: Projeto de site / Suporte" required minlength="3">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="mensagem">Detalhes da mensagem *</label>
+            <textarea id="mensagem" placeholder="Descreva brevemente o que sua empresa precisa..." required minlength="10"></textarea>
+          </div>
+
+          <button class="btn btn-gold" type="submit" style="width:100%;">Enviar mensagem para a equipe <i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== 15. RODAPÉ ENXUTO ===== -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="#inicio">
+            <span class="brand-mark">T</span>
+            <span style="color:#ffffff">TechConnect<small style="color:rgba(255,255,255,0.5)">TECNOLOGIA COM PROPÓSITO</small></span>
+          </a>
+          <p>Conectando negócios e possibilidades através da tecnologia com escuta, cuidado e excelência contínua.</p>
+        </div>
+
+        <div class="footer-links">
+          <nav class="footer-col" aria-label="Links do rodapé">
+            <strong>Navegação</strong>
+            <a href="#sobre">A empresa</a>
+            <a href="#proposito">Pilares</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#projetos">Projetos</a>
+            <a href="#depoimentos">Depoimentos</a>
+            <a href="#simulador">Simulador</a>
+          </nav>
+
+          <div class="footer-col">
+            <strong>Contato</strong>
+            <a href="mailto:contato@techconnect.com.br">contato@techconnect.com.br</a>
+            <a href="tel:08005912026">0800 591 2026</a>
+            <a href="#contato">Atendimento em todo o Brasil</a>
+          </div>
+
+          <div class="footer-col">
+            <strong>Redes sociais</strong>
+            <div class="social">
+              <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 TechConnect Soluções Digitais Ltda. Todos os direitos reservados.</span>
+        <span>Atendimento em todo o Brasil <span id="secret-bug-dot" onclick="iniciaJogoBug()" style="cursor:pointer; color:var(--accent-light);" title="Ponto secreto...">✦</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SELETOR DE PALETA FLUTUANTE DE CORES -->
+  <div class="paleta">
+    <button class="paleta-abre" id="paleta-toggle" aria-label="Alternar paleta de cores">🎨</button>
+    <div class="paleta-opcoes" id="paleta-opcoes" hidden>
+      <!-- Botões de paletas -->
+    </div>
+  </div>
+
+  <!-- MODAL DE SERVIÇOS EXPANDIDO COM ILUSTRAÇÃO, 4 ABAS E DIAGNÓSTICO -->
+  <dialog id="modal-servico">
+    <div class="modal-head">
+      <button class="modal-close" onclick="fechaModalServico()">&times;</button>
+      <small id="m-serv-cat">DETALHES DO SERVIÇO</small>
+      <h3 id="m-serv-titulo">Título do Serviço</h3>
+    </div>
+    <img id="m-serv-img" class="modal-banner" src="" alt="Imagem ilustrativa do serviço">
+
+    <div class="modal-tabs">
+      <div class="modal-tab-btn active" onclick="trocaTabModal(0, this)">1. Visão Geral & Entregáveis</div>
+      <div class="modal-tab-btn" onclick="trocaTabModal(1, this)">2. Etapas & Cronograma</div>
+      <div class="modal-tab-btn" onclick="trocaTabModal(2, this)">3. Para Quem é & Garantia</div>
+      <div class="modal-tab-btn" onclick="trocaTabModal(3, this)">4. Mini-Diagnóstico Rápido</div>
+    </div>
+
+    <div class="modal-body">
+      <!-- Aba 1: Visão Geral -->
+      <div class="modal-tab-content active" id="mtab-0">
+        <p id="m-serv-desc" style="font-size:0.98rem; color:var(--muted); line-height:1.65; margin-bottom:14px;"></p>
+        <h5 style="font-size:0.86rem; font-weight:700; text-transform:uppercase; color:var(--accent-dark); margin-bottom:8px;">Checklist de Entregáveis Concretos:</h5>
+        <ul class="modal-checklist" id="m-serv-checklist"></ul>
+      </div>
+
+      <!-- Aba 2: Cronograma -->
+      <div class="modal-tab-content" id="mtab-1">
+        <div id="m-serv-etapas-box" style="display:grid; gap:12px;"></div>
+      </div>
+
+      <!-- Aba 3: Garantia -->
+      <div class="modal-tab-content" id="mtab-2">
+        <div style="background:var(--cream); padding:18px; border-radius:var(--radius-md); margin-bottom:14px;">
+          <h5 style="font-weight:700; color:var(--primary-deep); margin-bottom:4px;">Perfil de Cliente Ideal:</h5>
+          <p id="m-serv-perfil" style="font-size:0.88rem; color:var(--muted);"></p>
+        </div>
+        <p id="m-serv-garantia" style="font-size:0.92rem; color:var(--muted); line-height:1.65;"></p>
+      </div>
+
+      <!-- Aba 4: Mini Diagnóstico -->
+      <div class="modal-tab-content" id="mtab-3">
+        <div class="diag-box">
+          <h5 style="font-size:0.95rem; font-weight:700; color:var(--primary-deep);">Qual é a sua necessidade imediata?</h5>
+          <div class="diag-opt" id="diag-opts-1">
+            <button class="active" onclick="setDiagOpt(this, 1)">Proposta imediata</button>
+            <button onclick="setDiagOpt(this, 1)">Modernização geral</button>
+            <button onclick="setDiagOpt(this, 1)">Dúvida técnica</button>
+          </div>
+          <h5 style="font-size:0.95rem; font-weight:700; color:var(--primary-deep); margin-top:14px;">Urgência estimada:</h5>
+          <div class="diag-opt" id="diag-opts-2">
+            <button class="active" onclick="setDiagOpt(this, 2)">Normal (1 a 2 semanas)</button>
+            <button onclick="setDiagOpt(this, 2)">Alta (Próximos dias)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <span style="font-size:0.82rem; color:var(--muted);">Ficou com alguma dúvida?</span>
+      <button class="btn btn-gold" onclick="solicitaServicoModal()">Solicitar proposta personalizada ↗</button>
+    </div>
+  </dialog>
+
+  <!-- MODAL DE PROJETOS COM ILUSTRAÇÃO -->
+  <dialog id="modal-projeto">
+    <div class="modal-head">
+      <button class="modal-close" onclick="fechaModalProjeto()">&times;</button>
+      <small id="mp-cat">PROJETO</small>
+      <h3 id="mp-titulo">Nome do Projeto</h3>
+    </div>
+    <img id="mp-img" class="modal-banner" src="" alt="Visualização do projeto">
+    <div class="modal-body">
+      <p id="mp-texto" style="font-size:0.96rem; color:var(--muted); margin-bottom:18px;"></p>
+      <div id="mp-detalhes" style="background:var(--cream); padding:18px; border-radius:var(--radius-md); font-size:0.88rem;"></div>
+    </div>
+  </dialog>
+
+  <!-- OVERLAY EASTER EGG 1: MATRIX CODE RAIN -->
+  <div id="matrix-overlay">
+    <div class="matrix-top">
+      <span>[MODO LABORATÓRIO MATRIX ACTIVATED]</span>
+      <button class="btn btn-ghost" onclick="fechaMatrix()" style="color:#10b981; border-color:#10b981;">Fechar Matrix (Esc)</button>
+    </div>
+    <canvas id="matrix-canvas"></canvas>
+  </div>
+
+  <!-- OVERLAY EASTER EGG 2: TERMINAL DEV CONSOLE -->
+  <div id="dev-console">
+    <div class="console-box">
+      <div class="console-head">
+        <span>TechConnect Terminal Dev Console v2.6</span>
+        <button onclick="fechaDevConsole()" style="color:var(--accent-light); background:transparent; border:0; cursor:pointer;">&times;</button>
+      </div>
+      <div class="console-body" id="console-output">
+        <div>TechConnect Kernel v2.6.0 carregado.</div>
+        <div>Digite <span style="color:var(--accent-light)">help</span> para listar os comandos.</div>
+      </div>
+      <div class="console-input-wrap">
+        <span style="color:var(--accent-light)">&gt;</span>
+        <input type="text" id="console-input" onkeydown="trataComandoConsole(event)" placeholder="Digite um comando...">
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY EASTER EGG 5: MINI-JOGO CAÇA AO BUG -->
+  <div id="bug-game">
+    <div class="bug-box">
+      <h3 style="font:600 1.5rem var(--serif); color:var(--primary-deep);">Caça ao Bug! 🐛</h3>
+      <p style="font-size:0.82rem; color:var(--muted); margin-top:4px;">Elimine os 5 bugs de servidor no menor tempo!</p>
+      <div style="font-weight:700; font-size:1.05rem; margin-top:8px; color:var(--accent-dark);" id="bug-score">Bugs: 0 / 5</div>
+      <div class="bug-arena" id="bug-arena"></div>
+      <button class="btn btn-navy" onclick="fechaJogoBug()">Encerrar jogo</button>
+    </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICAÇÃO -->
+  <div class="toast" id="toast" role="status"></div>
+  <button class="back-top" id="back-top" aria-label="Voltar ao topo"><i class="fa-solid fa-arrow-up"></i></button>
+
+  <!-- ===== SCRIPTS JAVASCRIPT ===== -->
+  <script>
+    const $ = (s, c = document) => c.querySelector(s);
+    const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+
+    // ===== GERADOR DE ILUSTRAÇÕES VETORIAIS (DATA URI SVG DE ALTA DEFINIÇÃO & CARREGAMENTO INSTANTÂNEO) =====
+    function svgDataURI(svgString) {
+      return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgString.trim().replace(/\s+/g, ' '));
+    }
+
+    // 1. ILUSTRAÇÃO SOBRE A EMPRESA (ESTÚDIO MODERNO DE TECNOLOGIA)
+    const SVG_SOBRE = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="100%" height="100%">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#050d18"/><stop offset="100%" stop-color="#14243b"/></linearGradient>
+          <linearGradient id="desk" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1e3a5f"/><stop offset="100%" stop-color="#0b192c"/></linearGradient>
+          <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e6c88b"/><stop offset="100%" stop-color="#c6a15b"/></linearGradient>
+        </defs>
+        <rect width="800" height="640" rx="16" fill="url(#bg)"/>
+        <!-- Grade de fundo -->
+        <g stroke="#c6a15b" stroke-opacity="0.08" stroke-width="1">
+          <line x1="0" y1="160" x2="800" y2="160"/><line x1="0" y1="320" x2="800" y2="320"/><line x1="0" y1="480" x2="800" y2="480"/>
+          <line x1="200" y1="0" x2="200" y2="640"/><line x1="400" y1="0" x2="400" y2="640"/><line x1="600" y1="0" x2="600" y2="640"/>
+        </g>
+        <!-- Mesa de Trabalho -->
+        <rect x="80" y="420" width="640" height="18" rx="4" fill="url(#desk)" stroke="#c6a15b" stroke-opacity="0.3"/>
+        <rect x="140" y="438" width="24" height="150" fill="#0b192c"/>
+        <rect x="636" y="438" width="24" height="150" fill="#0b192c"/>
+        <!-- Monitor Principal Ultrawide -->
+        <rect x="180" y="160" width="440" height="230" rx="10" fill="#091322" stroke="#c6a15b" stroke-width="2"/>
+        <rect x="375" y="390" width="50" height="30" fill="#1e3a5f"/>
+        <ellipse cx="400" cy="420" rx="60" ry="8" fill="#050d18"/>
+        <!-- Conteúdo do Monitor (Código & Dashboard) -->
+        <rect x="200" y="180" width="180" height="190" rx="6" fill="#050d18" opacity="0.9"/>
+        <line x1="215" y1="200" x2="310" y2="200" stroke="#14b8a6" stroke-width="3" stroke-linecap="round"/>
+        <line x1="215" y1="220" x2="350" y2="220" stroke="#c6a15b" stroke-width="3" stroke-linecap="round"/>
+        <line x1="215" y1="240" x2="280" y2="240" stroke="#e6c88b" stroke-width="3" stroke-linecap="round"/>
+        <line x1="215" y1="260" x2="330" y2="260" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="215" y1="280" x2="300" y2="280" stroke="#14b8a6" stroke-width="3" stroke-linecap="round"/>
+        <!-- Dashboard com Gráfico no Monitor -->
+        <rect x="395" y="180" width="210" height="190" rx="6" fill="#070f1c"/>
+        <path d="M 410,330 Q 450,290 490,300 T 580,220" fill="none" stroke="url(#gold)" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="580" cy="220" r="5" fill="#14b8a6"/>
+        <!-- Acessórios de Estúdio (Caneca & Luminária Soft) -->
+        <rect x="110" y="375" width="30" height="45" rx="4" fill="#c6a15b"/>
+        <path d="M 140,385 C 150,385 150,410 140,410" fill="none" stroke="#c6a15b" stroke-width="3"/>
+        <path d="M 680,420 L 640,310 L 670,305" fill="none" stroke="#14b8a6" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="640" cy="310" rx="22" ry="10" fill="#14b8a6" opacity="0.4"/>
+        <!-- Selo comemorativo integrativo -->
+        <circle cx="400" cy="90" r="42" fill="#0b192c" stroke="#c6a15b" stroke-width="2"/>
+        <text x="400" y="96" text-anchor="middle" fill="#e6c88b" font-family="Playfair Display, serif" font-size="20" font-weight="bold">25+</text>
+        <text x="400" y="112" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="9" letter-spacing="2">ANOS TI</text>
+      </svg>
+    `);
+
+    // 2. PILARES: MISSÃO, VISÃO E VALORES
+    const SVG_MISSAO = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" width="100%" height="100%">
+        <rect width="500" height="280" fill="#0b192c"/>
+        <circle cx="250" cy="140" r="110" fill="#1e3a5f" opacity="0.4"/>
+        <!-- Bússola e Caminho Iluminado -->
+        <circle cx="250" cy="140" r="70" fill="none" stroke="#c6a15b" stroke-width="2" stroke-dasharray="6,4"/>
+        <polygon points="250,85 265,140 250,195 235,140" fill="#14b8a6"/>
+        <polygon points="250,85 265,140 250,140" fill="#e6c88b"/>
+        <circle cx="250" cy="140" r="8" fill="#050d18" stroke="#c6a15b" stroke-width="2"/>
+        <path d="M 50,220 C 150,180 350,260 450,200" fill="none" stroke="#c6a15b" stroke-width="3" stroke-dasharray="4,4"/>
+        <text x="250" y="250" text-anchor="middle" fill="#e6c88b" font-family="sans-serif" font-size="12" font-weight="700" letter-spacing="2">SIMPLIFICAR O DIGITAL</text>
+      </svg>
+    `);
+
+    const SVG_VISAO = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" width="100%" height="100%">
+        <rect width="500" height="280" fill="#0b192c"/>
+        <!-- Horizonte Global Tecnológico -->
+        <circle cx="250" cy="220" r="150" fill="none" stroke="#14b8a6" stroke-width="1.5" stroke-opacity="0.5"/>
+        <circle cx="250" cy="220" r="100" fill="none" stroke="#c6a15b" stroke-width="1" stroke-dasharray="5,5"/>
+        <g stroke="#e6c88b" stroke-width="1.5">
+          <line x1="250" y1="70" x2="160" y2="150"/><line x1="250" y1="70" x2="340" y2="150"/>
+          <line x1="160" y1="150" x2="340" y2="150"/>
+        </g>
+        <circle cx="250" cy="70" r="9" fill="#14b8a6"/>
+        <circle cx="160" cy="150" r="7" fill="#c6a15b"/>
+        <circle cx="340" cy="150" r="7" fill="#c6a15b"/>
+        <text x="250" y="245" text-anchor="middle" fill="#14b8a6" font-family="sans-serif" font-size="12" font-weight="700" letter-spacing="2">CONECTAR POSSIBILIDADES</text>
+      </svg>
+    `);
+
+    const SVG_VALORES = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" width="100%" height="100%">
+        <rect width="500" height="280" fill="#0b192c"/>
+        <!-- Escudo de Ética e Balança de Precisão -->
+        <path d="M 250,50 L 320,80 V 160 C 320,210 250,240 250,240 C 250,240 180,210 180,160 V 80 Z" fill="#14243b" stroke="#c6a15b" stroke-width="2.5"/>
+        <path d="M 225,145 L 242,162 L 280,120" fill="none" stroke="#14b8a6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="250" y="260" text-anchor="middle" fill="#e6c88b" font-family="sans-serif" font-size="12" font-weight="700" letter-spacing="2">ÉTICA &amp; EXCELÊNCIA</text>
+      </svg>
+    `);
+
+    // 3. SERVIÇOS (4 CENAS ILUSTRADAS DETALHADAS)
+    const SVG_SRV_SITES = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+        <rect width="600" height="400" rx="12" fill="#070f1c"/>
+        <!-- Monitor Desktop -->
+        <rect x="70" y="60" width="340" height="220" rx="8" fill="#0f1c2e" stroke="#c6a15b" stroke-width="2"/>
+        <rect x="85" y="80" width="310" height="170" fill="#050d18"/>
+        <rect x="95" y="95" width="120" height="15" rx="3" fill="#14b8a6"/>
+        <rect x="95" y="125" width="290" height="40" rx="4" fill="#1e3a5f"/>
+        <rect x="95" y="175" width="85" height="55" rx="4" fill="#c6a15b" opacity="0.8"/>
+        <rect x="195" y="175" width="85" height="55" rx="4" fill="#14b8a6" opacity="0.8"/>
+        <rect x="295" y="175" width="90" height="55" rx="4" fill="#e6c88b" opacity="0.8"/>
+        <!-- Smartphone Responsivo sobreposto -->
+        <rect x="370" y="140" width="150" height="200" rx="14" fill="#0b192c" stroke="#14b8a6" stroke-width="3"/>
+        <rect x="382" y="160" width="126" height="160" fill="#050d18"/>
+        <rect x="392" y="175" width="106" height="25" rx="3" fill="#c6a15b"/>
+        <rect x="392" y="210" width="106" height="90" rx="4" fill="#1e3a5f"/>
+      </svg>
+    `);
+
+    const SVG_SRV_SUPORTE = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+        <rect width="600" height="400" rx="12" fill="#070f1c"/>
+        <!-- Rack de Servidores e Central de Operações -->
+        <rect x="60" y="50" width="200" height="300" rx="8" fill="#0b192c" stroke="#14b8a6" stroke-width="2"/>
+        <g fill="#050d18" stroke="#14b8a6" stroke-opacity="0.3">
+          <rect x="75" y="75" width="170" height="40" rx="4"/>
+          <rect x="75" y="130" width="170" height="40" rx="4"/>
+          <rect x="75" y="185" width="170" height="40" rx="4"/>
+          <rect x="75" y="240" width="170" height="40" rx="4"/>
+          <rect x="75" y="295" width="170" height="40" rx="4"/>
+        </g>
+        <!-- LEDs de Status Ativos -->
+        <circle cx="95" cy="95" r="4" fill="#10b981"/><circle cx="110" cy="95" r="4" fill="#10b981"/><circle cx="125" cy="95" r="4" fill="#c6a15b"/>
+        <circle cx="95" cy="150" r="4" fill="#10b981"/><circle cx="110" cy="150" r="4" fill="#10b981"/>
+        <circle cx="95" cy="205" r="4" fill="#10b981"/><circle cx="110" cy="205" r="4" fill="#10b981"/>
+        <!-- Painel de Monitoramento Remoto -->
+        <rect x="300" y="80" width="240" height="160" rx="8" fill="#0f1c2e" stroke="#c6a15b" stroke-width="2"/>
+        <path d="M 320,180 L 360,140 L 400,160 L 450,110 L 510,130" fill="none" stroke="#14b8a6" stroke-width="3" stroke-linecap="round"/>
+        <text x="420" y="215" text-anchor="middle" fill="#e6c88b" font-family="monospace" font-size="14" font-weight="700">UPTIME 99.9%</text>
+        <!-- Headset Ilustrado -->
+        <path d="M 360,320 C 360,260 480,260 480,320" fill="none" stroke="#c6a15b" stroke-width="5" stroke-linecap="round"/>
+        <rect x="350" y="310" width="20" height="35" rx="4" fill="#14b8a6"/>
+        <rect x="470" y="310" width="20" height="35" rx="4" fill="#14b8a6"/>
+      </svg>
+    `);
+
+    const SVG_SRV_MANUTENCAO = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+        <rect width="600" height="400" rx="12" fill="#070f1c"/>
+        <!-- Placa-Mãe e Componentes de Hardware -->
+        <rect x="80" y="50" width="440" height="300" rx="10" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+        <!-- Socket do Processador CPU -->
+        <rect x="140" y="100" width="120" height="120" rx="6" fill="#1e293b" stroke="#c6a15b" stroke-width="2"/>
+        <rect x="160" y="120" width="80" height="80" fill="#0f172a"/>
+        <text x="200" y="165" text-anchor="middle" fill="#e6c88b" font-family="sans-serif" font-size="14" font-weight="700">CPU</text>
+        <!-- Slots de Memória RAM -->
+        <rect x="300" y="90" width="14" height="150" fill="#1e3a5f" stroke="#c6a15b"/>
+        <rect x="325" y="90" width="14" height="150" fill="#1e3a5f" stroke="#c6a15b"/>
+        <rect x="350" y="90" width="14" height="150" fill="#14b8a6" stroke="#10b981"/>
+        <rect x="375" y="90" width="14" height="150" fill="#14b8a6" stroke="#10b981"/>
+        <!-- SSD NVMe M.2 -->
+        <rect x="140" y="250" width="180" height="40" rx="4" fill="#0f1c2e" stroke="#e6c88b"/>
+        <text x="210" y="275" text-anchor="middle" fill="#14b8a6" font-family="monospace" font-size="12" font-weight="700">SSD NVMe 2TB</text>
+        <!-- Chave de Fenda Técnica -->
+        <path d="M 460,320 L 520,240" stroke="#c6a15b" stroke-width="10" stroke-linecap="round"/>
+        <path d="M 520,240 L 540,215" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    `);
+
+    const SVG_SRV_CONSULTORIA = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+        <rect width="600" height="400" rx="12" fill="#070f1c"/>
+        <!-- Mesa Estratégica &amp; Relatório Digital -->
+        <rect x="80" y="60" width="440" height="280" rx="10" fill="#0f1c2e" stroke="#c6a15b" stroke-width="2"/>
+        <!-- Gráfico de Rosca de ROI -->
+        <circle cx="200" cy="180" r="65" fill="none" stroke="#1e3a5f" stroke-width="24"/>
+        <circle cx="200" cy="180" r="65" fill="none" stroke="#c6a15b" stroke-width="24" stroke-dasharray="290 120"/>
+        <circle cx="200" cy="180" r="65" fill="none" stroke="#14b8a6" stroke-width="24" stroke-dasharray="100 310"/>
+        <text x="200" y="185" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="700">+145% ROI</text>
+        <!-- Nuvem &amp; Selo LGPD -->
+        <rect x="310" y="100" width="180" height="90" rx="6" fill="#050d18" stroke="#14b8a6"/>
+        <path d="M 370,150 C 350,150 340,130 360,120 C 370,105 400,105 410,120 C 430,120 430,150 410,150 Z" fill="#14b8a6" opacity="0.6"/>
+        <rect x="310" y="210" width="180" height="90" rx="6" fill="#050d18" stroke="#c6a15b"/>
+        <text x="400" y="250" text-anchor="middle" fill="#e6c88b" font-family="sans-serif" font-size="13" font-weight="700">CONFORMIDADE LGPD</text>
+        <text x="400" y="275" text-anchor="middle" fill="#14b8a6" font-family="sans-serif" font-size="11">Auditado &amp; Seguro</text>
+      </svg>
+    `);
+
+    // 4. PROCESSO (4 ETAPAS DINÂMICAS DO PAINEL)
+    const SVG_PROC = {
+      1: svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" width="100%" height="100%">
+          <rect width="500" height="300" fill="#0b192c"/>
+          <circle cx="160" cy="140" r="70" fill="#1e3a5f" stroke="#c6a15b" stroke-width="2"/>
+          <path d="M 140,110 L 140,160 M 140,160 L 180,160" fill="none" stroke="#e6c88b" stroke-width="4" stroke-linecap="round"/>
+          <!-- Prancha de Diagnóstico -->
+          <rect x="270" y="70" width="160" height="170" rx="6" fill="#050d18" stroke="#14b8a6" stroke-width="2"/>
+          <line x1="290" y1="100" x2="410" y2="100" stroke="#c6a15b" stroke-width="3"/>
+          <line x1="290" y1="130" x2="390" y2="130" stroke="#14b8a6" stroke-width="3"/>
+          <line x1="290" y1="160" x2="370" y2="160" stroke="#e6c88b" stroke-width="3"/>
+          <line x1="290" y1="190" x2="400" y2="190" stroke="#94a3b8" stroke-width="3"/>
+        </svg>
+      `),
+      2: svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" width="100%" height="100%">
+          <rect width="500" height="300" fill="#0b192c"/>
+          <!-- Blueprint Protótipo -->
+          <rect x="60" y="50" width="380" height="200" rx="8" fill="#050d18" stroke="#14b8a6" stroke-width="2" stroke-dasharray="6,4"/>
+          <rect x="90" y="80" width="140" height="140" fill="#1e3a5f" stroke="#c6a15b"/>
+          <rect x="250" y="80" width="160" height="40" fill="#c6a15b"/>
+          <rect x="250" y="130" width="160" height="90" fill="#0f1c2e" stroke="#14b8a6"/>
+        </svg>
+      `),
+      3: svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" width="100%" height="100%">
+          <rect width="500" height="300" fill="#0b192c"/>
+          <!-- Engrenagens Ágeis & Código -->
+          <circle cx="170" cy="140" r="55" fill="none" stroke="#c6a15b" stroke-width="8" stroke-dasharray="15,10"/>
+          <circle cx="170" cy="140" r="25" fill="#14b8a6"/>
+          <rect x="270" y="70" width="170" height="160" rx="6" fill="#050d18" stroke="#e6c88b" stroke-width="2"/>
+          <text x="290" y="105" fill="#14b8a6" font-family="monospace" font-size="14" font-weight="700">&lt;code&gt;</text>
+          <text x="300" y="135" fill="#c6a15b" font-family="monospace" font-size="12">npm run build</text>
+          <text x="300" y="165" fill="#10b981" font-family="monospace" font-size="12">✔ Compiled</text>
+        </svg>
+      `),
+      4: svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" width="100%" height="100%">
+          <rect width="500" height="300" fill="#0b192c"/>
+          <!-- Foguete de Lançamento e Suporte -->
+          <path d="M 250,50 C 290,110 290,180 270,220 L 230,220 C 210,180 210,110 250,50 Z" fill="#e6c88b" stroke="#c6a15b" stroke-width="2"/>
+          <circle cx="250" cy="120" r="14" fill="#0b192c" stroke="#14b8a6" stroke-width="3"/>
+          <polygon points="230,220 250,260 270,220" fill="#ef4444"/>
+          <polygon points="240,220 250,280 260,220" fill="#f59e0b"/>
+        </svg>
+      `)
+    };
+
+    // 5. DIFERENCIAIS (4 CENAS ILUSTRADAS DETALHADAS)
+    const SVG_DIF = [
+      svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="100%">
+          <rect width="600" height="240" fill="#050d18"/>
+          <!-- Transparência Total: Gráficos de Custos e Prazos Abastados -->
+          <rect x="40" y="40" width="520" height="160" rx="8" fill="#0f1c2e" stroke="#c6a15b" stroke-width="1.5"/>
+          <line x1="80" y1="160" x2="520" y2="160" stroke="#1e3a5f" stroke-width="2"/>
+          <rect x="100" y="100" width="45" height="60" fill="#c6a15b"/>
+          <rect x="180" y="80" width="45" height="80" fill="#14b8a6"/>
+          <rect x="260" y="60" width="45" height="100" fill="#e6c88b"/>
+          <rect x="340" y="90" width="45" height="70" fill="#c6a15b"/>
+          <rect x="420" y="50" width="45" height="110" fill="#10b981"/>
+          <text x="300" y="30" text-anchor="middle" fill="#e6c88b" font-family="sans-serif" font-size="12" font-weight="700">TRANSPARÊNCIA ORÇAMENTÁRIA 100%</text>
+        </svg>
+      `),
+      svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="100%">
+          <rect width="600" height="240" fill="#050d18"/>
+          <!-- Solução Sob Medida: Encaixe Perfeito de Módulos -->
+          <rect x="80" y="50" width="130" height="140" rx="8" fill="#1e3a5f" stroke="#c6a15b" stroke-width="2"/>
+          <rect x="235" y="50" width="130" height="140" rx="8" fill="#14b8a6" opacity="0.8"/>
+          <rect x="390" y="50" width="130" height="140" rx="8" fill="#c6a15b"/>
+          <path d="M 210,120 L 235,120 M 365,120 L 390,120" stroke="#ffffff" stroke-width="4" stroke-dasharray="4,4"/>
+        </svg>
+      `),
+      svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="100%">
+          <rect width="600" height="240" fill="#050d18"/>
+          <!-- Suporte Contínuo: Loop Infinito de Assistência -->
+          <path d="M 180,120 C 180,70 300,70 300,120 C 300,170 420,170 420,120 C 420,70 300,70 300,120 C 300,170 180,170 180,120 Z" fill="none" stroke="#c6a15b" stroke-width="6"/>
+          <circle cx="300" cy="120" r="16" fill="#14b8a6"/>
+          <text x="300" y="215" text-anchor="middle" fill="#14b8a6" font-family="sans-serif" font-size="12" font-weight="700">ACOMPANHAMENTO 24/7</text>
+        </svg>
+      `),
+      svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="100%">
+          <rect width="600" height="240" fill="#050d18"/>
+          <!-- Segurança & Acessibilidade: Cadeado e Checkmarks -->
+          <rect x="240" y="90" width="120" height="100" rx="10" fill="#0b192c" stroke="#14b8a6" stroke-width="3"/>
+          <path d="M 270,90 V 60 C 270,40 330,40 330,60 V 90" fill="none" stroke="#c6a15b" stroke-width="4"/>
+          <circle cx="300" cy="135" r="10" fill="#e6c88b"/>
+        </svg>
+      `)
+    ];
+
+    // 6. GERADOR DE AVATARES DE CLIENTES (24 RETRATOS ILUSTRADOS ÚNICOS)
+    function geraAvatarSVG(id, bgColor, hairColor, skinColor, temOculos = false) {
+      const roupa = ['#1e3a5f', '#0f766e', '#334155', '#7c3aed', '#92400e', '#155e75'][id % 6];
+      const cabelo = id % 4;
+      const cabeloForma = [
+        '<path d="M30 57 C25 18 42 12 62 13 C91 13 99 37 89 66 L82 47 C72 38 48 38 37 52 L35 72 Z" fill="' + hairColor + '"/>',
+        '<path d="M31 58 C25 28 43 14 62 14 C88 14 98 35 88 60 C83 45 78 40 69 36 C58 48 45 48 35 63 Z" fill="' + hairColor + '"/>',
+        '<path d="M29 58 C25 25 45 12 64 14 C91 15 98 37 89 61 L83 84 L77 48 C65 40 49 39 37 51 L34 84 Z" fill="' + hairColor + '"/>',
+        '<path d="M32 57 C28 30 43 14 62 14 C83 14 96 30 90 55 C82 44 74 41 62 39 C50 41 40 46 32 57 Z" fill="' + hairColor + '"/>'
+      ][cabelo];
+      return svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+          <defs>
+            <linearGradient id="bg${id}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="${bgColor}"/><stop offset="1" stop-color="#071321"/>
+            </linearGradient>
+          </defs>
+          <rect width="120" height="120" rx="60" fill="url(#bg${id})"/>
+          <circle cx="60" cy="58" r="49" fill="none" stroke="#c6a15b" stroke-opacity=".25"/>
+          <path d="M13 120 C17 91 35 82 60 82 C85 82 103 91 107 120Z" fill="${roupa}"/>
+          <path d="M47 80 L60 98 L73 80" fill="#f8fafc" opacity=".9"/>
+          <path d="M50 76 L50 88 L60 98 L70 88 L70 76" fill="${skinColor}"/>
+          <ellipse cx="60" cy="57" rx="27" ry="32" fill="${skinColor}"/>
+          <ellipse cx="32" cy="61" rx="4" ry="8" fill="${skinColor}"/>
+          <ellipse cx="88" cy="61" rx="4" ry="8" fill="${skinColor}"/>
+          ${cabeloForma}
+          <path d="M43 55 Q49 51 54 55 M66 55 Q72 51 78 55" fill="none" stroke="${hairColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="49" cy="61" rx="2.5" ry="3" fill="#172033"/>
+          <ellipse cx="72" cy="61" rx="2.5" ry="3" fill="#172033"/>
+          <path d="M59 63 L56 71 Q60 74 64 71" fill="none" stroke="#9a6652" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M50 77 Q60 85 70 77" fill="none" stroke="#7c3f3f" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="42" cy="70" r="4" fill="#fda4af" opacity=".28"/><circle cx="78" cy="70" r="4" fill="#fda4af" opacity=".28"/>
+          ${temOculos ? `<g fill="none" stroke="#c6a15b" stroke-width="2"><rect x="39" y="55" width="19" height="14" rx="5"/><rect x="63" y="55" width="19" height="14" rx="5"/><path d="M58 61 H63"/></g>` : ''}
+          <path d="M25 115 Q60 103 95 115" fill="none" stroke="#e6c88b" stroke-opacity=".55"/>
+        </svg>
+      `);
+    }
+
+    // 7. ILUSTRAÇÃO DA SEÇÃO DE CONTATO
+    const SVG_CONTATO = svgDataURI(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="100%">
+        <rect width="600" height="240" fill="#0b192c"/>
+        <!-- Central de Atendimento Consultivo -->
+        <rect x="60" y="40" width="480" height="160" rx="10" fill="#070f1c" stroke="#c6a15b" stroke-width="2"/>
+        <circle cx="140" cy="120" r="45" fill="#1e3a5f" stroke="#14b8a6" stroke-width="2"/>
+        <path d="M 125,120 L 135,130 L 155,110" fill="none" stroke="#e6c88b" stroke-width="4" stroke-linecap="round"/>
+        <!-- Balões de Conversa Interativos -->
+        <rect x="230" y="70" width="260" height="40" rx="8" fill="#14243b" stroke="#14b8a6"/>
+        <text x="250" y="95" fill="#ffffff" font-family="sans-serif" font-size="12">Olá! Como podemos impulsionar sua TI?</text>
+        <rect x="230" y="125" width="220" height="40" rx="8" fill="#c6a15b"/>
+        <text x="250" y="150" fill="#050d18" font-family="sans-serif" font-size="12" font-weight="700">Vamos agendar um diagnóstico!</text>
+      </svg>
+    `);
+
+    // 8. GERADOR DE ILUSTRAÇÕES DE PROJETOS DO PORTFÓLIO (24 ARTES TEMÁTICAS ÚNICAS)
+    function geraProjetoSVG(titulo, categoria, id) {
+      const paletas = {
+        web: { bg:'#071321', panel:'#10243a', a:'#c6a15b', b:'#14b8a6', c:'#e6c88b' },
+        app: { bg:'#091827', panel:'#132b43', a:'#14b8a6', b:'#e6c88b', c:'#60a5fa' },
+        infra: { bg:'#06131d', panel:'#102b32', a:'#e6c88b', b:'#14b8a6', c:'#60a5fa' }
+      };
+      const p = paletas[categoria] || paletas.web;
+      const safeTitle = String(titulo).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const scenes = {
+        1: `<path d="M110 275 L490 275" stroke="${p.a}" stroke-opacity=".5"/><rect x="145" y="105" width="155" height="170" rx="8" fill="#f5eee2"/><path d="M170 235 Q220 130 275 235" fill="#d9b77b"/><circle cx="222" cy="165" r="32" fill="#e8d5b5"/><rect x="325" y="112" width="155" height="70" rx="7" fill="${p.b}"/><rect x="325" y="195" width="155" height="80" rx="7" fill="${p.panel}"/><path d="M345 220h110 M345 240h80" stroke="${p.c}" stroke-width="5"/>`,
+        2: `<rect x="125" y="95" width="350" height="185" rx="10" fill="#f8fafc"/><rect x="125" y="95" width="350" height="42" rx="10" fill="${p.b}"/><circle cx="300" cy="195" r="38" fill="#dbeafe"/><path d="M270 205 Q300 145 330 205" fill="#60a5fa"/><rect x="165" y="245" width="270" height="15" rx="7" fill="#cbd5e1"/><rect x="165" y="245" width="175" height="15" rx="7" fill="${p.a}"/>`,
+        3: `<rect x="125" y="100" width="350" height="180" rx="9" fill="#fff7ed"/><rect x="125" y="100" width="350" height="35" rx="8" fill="#7c2d12"/><circle cx="165" cy="117" r="5" fill="#fbbf24"/><path d="M170 210 Q220 145 270 210 Q320 145 370 210" fill="#d97706"/><circle cx="220" cy="175" r="22" fill="#fbbf24"/><circle cx="370" cy="175" r="22" fill="#fbbf24"/><rect x="160" y="245" width="280" height="12" rx="6" fill="#fed7aa"/>`,
+        4: `<rect x="120" y="95" width="360" height="190" rx="9" fill="#f8fafc"/><rect x="120" y="95" width="360" height="42" rx="9" fill="${p.a}"/><rect x="145" y="155" width="100" height="100" rx="8" fill="#bfdbfe"/><rect x="265" y="155" width="185" height="18" rx="5" fill="${p.panel}"/><rect x="265" y="190" width="150" height="12" rx="5" fill="#94a3b8"/><rect x="265" y="220" width="175" height="35" rx="6" fill="${p.b}"/>`,
+        5: `<rect x="135" y="90" width="330" height="205" rx="8" fill="#f8fafc"/><rect x="135" y="90" width="330" height="35" rx="8" fill="#1e293b"/><rect x="160" y="150" width="210" height="110" rx="5" fill="#e2e8f0"/><path d="M180 235 L220 195 L255 215 L300 165 L350 190" fill="none" stroke="${p.b}" stroke-width="5"/><rect x="390" y="150" width="50" height="110" rx="5" fill="${p.a}"/>`,
+        6: `<rect x="125" y="90" width="350" height="205" rx="10" fill="#f8fafc"/><rect x="125" y="90" width="350" height="35" rx="8" fill="${p.b}"/><g fill="#f1f5f9" stroke="#cbd5e1"><rect x="150" y="150" width="85" height="110" rx="7"/><rect x="255" y="150" width="85" height="110" rx="7"/><rect x="360" y="150" width="85" height="110" rx="7"/></g><g fill="${p.a}"><circle cx="192" cy="190" r="23"/><path d="M275 205 Q298 155 320 205Z"/><circle cx="402" cy="190" r="22"/></g>`,
+        7: `<rect x="125" y="90" width="350" height="205" rx="10" fill="#111827"/><circle cx="300" cy="185" r="65" fill="none" stroke="#334155" stroke-width="18"/><path d="M300 120 A65 65 0 1 1 240 210" fill="none" stroke="${p.a}" stroke-width="18" stroke-linecap="round"/><path d="M180 255h240" stroke="${p.b}" stroke-width="8" stroke-linecap="round"/>`,
+        8: `<rect x="125" y="90" width="350" height="205" rx="10" fill="#fff7ed"/><path d="M160 220 Q170 130 225 165 Q260 100 300 165 Q350 115 390 175 Q440 155 445 220Z" fill="#d6a15e"/><path d="M170 235h260" stroke="#92400e" stroke-width="7"/><circle cx="215" cy="185" r="12" fill="#fef3c7"/><circle cx="350" cy="180" r="12" fill="#fef3c7"/>`,
+        9: `<rect x="115" y="85" width="370" height="220" rx="9" fill="${p.panel}"/><g fill="${p.a}"><rect x="145" y="120" width="90" height="55" rx="5"/><rect x="250" y="120" width="90" height="55" rx="5"/><rect x="355" y="120" width="100" height="55" rx="5"/></g><path d="M145 265 L195 220 L245 238 L300 190 L355 210 L430 165" fill="none" stroke="${p.b}" stroke-width="6"/><path d="M145 280h300" stroke="#64748b" stroke-width="2"/>`,
+        10: `<rect x="215" y="55" width="170" height="290" rx="24" fill="#050d18" stroke="${p.a}" stroke-width="5"/><rect x="230" y="85" width="140" height="230" rx="13" fill="${p.panel}"/><circle cx="300" cy="200" r="48" fill="${p.b}" opacity=".75"/><path d="M270 200h60 M300 170v60" stroke="#fff" stroke-width="7"/><rect x="265" y="65" width="70" height="5" rx="3" fill="#64748b"/>`,
+        11: `<rect x="115" y="90" width="370" height="210" rx="10" fill="${p.panel}"/><text x="300" y="215" fill="${p.a}" font-size="92" text-anchor="middle" font-family="Arial" font-weight="bold">042</text><rect x="170" y="240" width="260" height="20" rx="10" fill="${p.b}"/><circle cx="300" cy="120" r="12" fill="${p.c}"/>`,
+        12: `<path d="M120 250 Q180 120 270 190 T480 125" fill="none" stroke="${p.b}" stroke-width="8" stroke-dasharray="12 8"/><path d="M120 250 L120 110 L480 110 L480 285 L120 285Z" fill="none" stroke="${p.a}" stroke-opacity=".45" stroke-width="3"/><g fill="${p.a}"><circle cx="120" cy="250" r="13"/><circle cx="270" cy="190" r="13"/><circle cx="480" cy="125" r="13"/></g><rect x="205" y="250" width="190" height="34" rx="8" fill="${p.panel}"/>`,
+        13: `<rect x="130" y="95" width="340" height="195" rx="10" fill="${p.panel}"/><rect x="165" y="135" width="270" height="85" rx="8" fill="#071321" stroke="${p.b}" stroke-width="3"/><g stroke="${p.a}" stroke-width="5"><path d="M195 155v45 M215 155v45 M245 155v45 M265 155v45 M305 155v45 M325 155v45 M355 155v45 M395 155v45"/></g><rect x="220" y="240" width="160" height="25" rx="5" fill="${p.a}"/>`,
+        14: `<rect x="125" y="90" width="350" height="210" rx="10" fill="${p.panel}"/><circle cx="300" cy="185" r="65" fill="none" stroke="#334155" stroke-width="20"/><path d="M300 120 A65 65 0 1 1 240 210" fill="none" stroke="${p.b}" stroke-width="20"/><text x="300" y="195" fill="#fff" text-anchor="middle" font-size="30" font-family="Arial">R$</text><path d="M175 265h250" stroke="${p.a}" stroke-width="7" stroke-linecap="round"/>`,
+        15: `<rect x="130" y="90" width="340" height="210" rx="10" fill="${p.panel}"/><rect x="155" y="120" width="130" height="130" rx="8" fill="#071321" stroke="${p.a}" stroke-width="3"/><circle cx="220" cy="185" r="35" fill="none" stroke="${p.b}" stroke-width="6"/><path d="M300 145h135 M300 180h110 M300 215h125" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/><path d="M300 260h95" stroke="${p.a}" stroke-width="8"/>`,
+        16: `<path d="M300 80 C245 145 220 190 220 225 A80 80 0 0 0 380 225 C380 190 355 145 300 80Z" fill="${p.b}" opacity=".75"/><path d="M300 140 L300 255 M255 205 Q300 170 345 205" stroke="${p.a}" stroke-width="7" fill="none"/><path d="M150 290 Q300 240 450 290" stroke="${p.c}" stroke-width="5" fill="none"/>`,
+        17: `<g stroke="${p.b}" stroke-width="4" fill="none"><path d="M300 120 L160 230 M300 120 L440 230 M300 120 L300 275"/></g><g fill="${p.a}"><circle cx="300" cy="120" r="22"/><circle cx="160" cy="230" r="18"/><circle cx="440" cy="230" r="18"/><circle cx="300" cy="275" r="18"/></g><rect x="220" y="65" width="160" height="35" rx="8" fill="${p.panel}"/>`,
+        18: `<path d="M190 220 C140 220 135 160 180 145 C190 85 275 75 305 130 C370 105 430 145 415 205 C410 235 380 245 350 245H190Z" fill="${p.panel}" stroke="${p.b}" stroke-width="5"/><path d="M300 160v105 M265 225l35 40 35-40" fill="none" stroke="${p.a}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`,
+        19: `<rect x="125" y="90" width="350" height="210" rx="10" fill="${p.panel}"/><path d="M300 120v150 M225 195h150" stroke="${p.a}" stroke-width="26" stroke-linecap="round"/><path d="M165 270h270" stroke="${p.b}" stroke-width="5"/><circle cx="300" cy="195" r="70" fill="none" stroke="${p.c}" stroke-opacity=".6" stroke-width="3"/>`,
+        20: `<rect x="140" y="100" width="320" height="185" rx="10" fill="${p.panel}" stroke="${p.a}" stroke-width="3"/><g fill="#071321" stroke="${p.b}" stroke-width="3"><rect x="175" y="135" width="250" height="35" rx="5"/><rect x="175" y="185" width="250" height="35" rx="5"/></g><path d="M210 152h100 M210 202h150" stroke="${p.a}" stroke-width="5"/><circle cx="390" cy="152" r="6" fill="${p.b}"/><circle cx="390" cy="202" r="6" fill="${p.b}"/>`,
+        21: `<g fill="none" stroke="${p.b}" stroke-width="4"><path d="M300 115 L170 250 M300 115 L430 250 M300 115 L300 265"/></g><g fill="${p.panel}" stroke="${p.a}" stroke-width="4"><circle cx="300" cy="115" r="45"/><circle cx="170" cy="250" r="35"/><circle cx="430" cy="250" r="35"/><circle cx="300" cy="265" r="35"/></g><g fill="${p.c}"><circle cx="300" cy="115" r="9"/><circle cx="170" cy="250" r="8"/><circle cx="430" cy="250" r="8"/></g>`,
+        22: `<rect x="125" y="90" width="350" height="210" rx="10" fill="${p.panel}"/><rect x="155" y="130" width="110" height="105" rx="7" fill="#071321" stroke="${p.a}" stroke-width="3"/><rect x="335" y="130" width="110" height="105" rx="7" fill="#071321" stroke="${p.b}" stroke-width="3"/><path d="M265 182h70 M315 168l20 14-20 14" stroke="${p.c}" stroke-width="6" fill="none"/><path d="M175 255h250" stroke="#64748b" stroke-width="5"/>`,
+        23: `<rect x="130" y="90" width="340" height="210" rx="10" fill="${p.panel}"/><path d="M190 160v-25a55 55 0 0 1 110 0v25" fill="none" stroke="${p.a}" stroke-width="8"/><rect x="175" y="155" width="140" height="100" rx="12" fill="#071321" stroke="${p.b}" stroke-width="4"/><circle cx="245" cy="205" r="18" fill="${p.c}"/><path d="M350 145h75 M350 180h75 M350 215h75" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>`,
+        24: `<path d="M110 210 C180 110 250 110 320 210 S450 310 500 180" fill="none" stroke="${p.b}" stroke-width="9"/><g fill="${p.a}"><circle cx="110" cy="210" r="16"/><circle cx="320" cy="210" r="16"/><circle cx="500" cy="180" r="16"/></g><rect x="185" y="75" width="230" height="55" rx="10" fill="${p.panel}" stroke="${p.a}" stroke-width="2"/><path d="M210 102h180" stroke="${p.c}" stroke-width="7" stroke-linecap="round"/>`
+      };
+      const scene = scenes[id] || scenes[1];
+      return svgDataURI(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+          <defs><linearGradient id="g${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p.bg}"/><stop offset="1" stop-color="#0b192c"/></linearGradient></defs>
+          <rect width="600" height="400" fill="url(#g${id})"/>
+          <g stroke="${p.a}" stroke-opacity=".12" stroke-width="1"><path d="M0 100H600 M0 200H600 M0 300H600 M150 0V400 M300 0V400 M450 0V400"/></g>
+          <rect x="55" y="38" width="490" height="324" rx="18" fill="#071321" stroke="${p.a}" stroke-opacity=".55" stroke-width="2"/>
+          <rect x="75" y="58" width="450" height="28" rx="7" fill="${p.panel}"/>
+          <circle cx="94" cy="72" r="4" fill="#ef4444"/><circle cx="108" cy="72" r="4" fill="#f59e0b"/><circle cx="122" cy="72" r="4" fill="#10b981"/>
+          ${scene}
+          <text x="300" y="340" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="17" font-weight="700">${safeTitle}</text>
+          <text x="300" y="358" text-anchor="middle" fill="${p.a}" font-family="Arial, sans-serif" font-size="9" letter-spacing="3">${categoria.toUpperCase()} · TECHCONNECT</text>
+        </svg>
+      `);
+    }
+
+    // ===== APLICAÇÃO DAS ILUSTRAÇÕES NAS SEÇÕES FIXAS DO SITE =====
+    function carregaIlustracoesEstaticas() {
+      $('#img-sobre').src = SVG_SOBRE;
+      $('#img-missao').src = SVG_MISSAO;
+      $('#img-visao').src = SVG_VISAO;
+      $('#img-valores').src = SVG_VALORES;
+
+      $('#img-srv-sites').src = SVG_SRV_SITES;
+      $('#img-srv-suporte').src = SVG_SRV_SUPORTE;
+      $('#img-srv-manutencao').src = SVG_SRV_MANUTENCAO;
+      $('#img-srv-consultoria').src = SVG_SRV_CONSULTORIA;
+
+      $('#proc-img').src = SVG_PROC[1];
+
+      $('#img-dif-0').src = SVG_DIF[0];
+      $('#img-dif-1').src = SVG_DIF[1];
+      $('#img-dif-2').src = SVG_DIF[2];
+      $('#img-dif-3').src = SVG_DIF[3];
+
+      $('#img-contato').src = SVG_CONTATO;
+    }
+
+    // Exibe Toast de Notificação
+    function exibeToast(msg) {
+      const t = $('#toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 4200);
+    }
+
+    // ===== SUMÁRIO COMPLETO =====
+    const fullIndexBtn = $('#nav-more-toggle');
+    const fullIndex = $('#nav-full-index');
+    const closeFullIndex = () => { fullIndex.hidden = true; fullIndexBtn.setAttribute('aria-expanded', 'false'); };
+    fullIndexBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const open = fullIndex.hidden;
+      fullIndex.hidden = !open;
+      fullIndexBtn.setAttribute('aria-expanded', String(open));
+    });
+    $('#nav-more-close').addEventListener('click', closeFullIndex);
+    $$('a', fullIndex).forEach(a => a.addEventListener('click', closeFullIndex));
+    document.addEventListener('click', (event) => { if (!event.target.closest('.nav-more-wrap')) closeFullIndex(); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeFullIndex(); });
+
+    // ===== MENU MOBILE =====
+    const menuBtn = $('#menu-toggle'), navLinks = $('#nav-links');
+    menuBtn.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
+      menuBtn.textContent = open ? '✕' : '☰';
+      document.body.classList.toggle('menu-open', open);
+    });
+    $$('a', navLinks).forEach(a => a.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      document.body.classList.remove('menu-open');
+      menuBtn.textContent = '☰';
+    }));
+
+    // Botão de Topo
+    const backTop = $('#back-top');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('visible', window.scrollY > 380);
+    }, { passive: true });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // PARALLAX SPOTLIGHT NO HERO (MANTENDO ESTRUTURA DO HERO INTACTA)
+    const heroSec = $('#inicio');
+    if (heroSec) {
+      heroSec.addEventListener('pointermove', (e) => {
+        const r = heroSec.getBoundingClientRect();
+        heroSec.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        heroSec.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    }
+
+    // ===== ALTERNAR TEMA ESCURO / CLARO =====
+    const themeBtn = $('#theme-toggle');
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+      exibeToast(isDark ? 'Modo escuro ativado' : 'Modo claro ativado');
+    });
+
+    // ===== ANIMAÇÃO REVEAL E CONTADORES =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    $$('.reveal').forEach(el => observer.observe(el));
+
+    const countObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const alvo = +el.dataset.alvo;
+          const sufixo = el.dataset.sufixo || '';
+          let atual = 0;
+          const inc = Math.ceil(alvo / 40);
+          const timer = setInterval(() => {
+            atual += inc;
+            if (atual >= alvo) {
+              el.textContent = alvo.toLocaleString('pt-BR') + sufixo;
+              clearInterval(timer);
+            } else {
+              el.textContent = atual.toLocaleString('pt-BR') + sufixo;
+            }
+          }, 35);
+          countObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    $$('[data-alvo]').forEach(el => countObserver.observe(el));
+
+    // ===== MODAL DE SERVIÇOS DETALHADO =====
+    const dadosServicos = {
+      sites: {
+        cat: 'DESENVOLVIMENTO WEB',
+        titulo: 'Desenvolvimento de Sites & Plataformas',
+        img: SVG_SRV_SITES,
+        desc: 'Criamos sites corporativos, lojas virtuais e portais responsivos de alta velocidade com imagens nítidas, otimização de SEO e painel intuitivo.',
+        checklist: [
+          'Design 100% responsivo e otimizado para celulares',
+          'Conformidade com diretrizes de acessibilidade WCAG 2.1',
+          'Painel intuitivo para você gerenciar o conteúdo com facilidade',
+          'Integração nativa com formulários, WhatsApp e Google Analytics',
+          'Otimização de velocidade Core Web Vitals'
+        ],
+        etapas: [
+          'Fase 1: Mapeamento de Requisitos e Arquitetura (1 a 2 semanas)',
+          'Fase 2: Prototipação Visual de Alta Fidelidade (1 a 2 semanas)',
+          'Fase 3: Desenvolvimento de Código e Testes (2 a 3 semanas)',
+          'Fase 4: Publicação Oficial, Treinamento de Equipe e Garantia'
+        ],
+        perfil: 'Empresas que precisam de presença digital profissional, rápida e com facilidade de atualização sem depender de programadores.',
+        garantia: 'Prazo médio de entrega de 3 a 5 semanas. Inclui 30 dias de garantia com correções ilimitadas e treinamento de equipe.'
+      },
+      suporte: {
+        cat: 'SUPORTE TÉCNICO',
+        titulo: 'Suporte Técnico Preventivo & Remoto',
+        img: SVG_SRV_SUPORTE,
+        desc: 'Atendimento corporativo ágil para manter sua infraestrutura operando sem paradas não planejadas.',
+        checklist: [
+          'Atendimento remoto em até 2 horas para emergências de rede',
+          'Configuração e monitoramento de redes Wi-Fi e roteadores corporativos',
+          'Prevenção contínua contra vírus, malwares e invasões',
+          'Gestão de rotinas automatizadas de backup em nuvem',
+          'Relatório mensal transparente de chamados e diagnósticos'
+        ],
+        etapas: [
+          'Fase 1: Auditoria Inicial da Infraestrutura da Empresa',
+          'Fase 2: Implantação de Ferramentas de Acesso Remoto Seguro',
+          'Fase 3: Operação Contínua com SLA Garantido em Contrato',
+          'Fase 4: Revisões Trimestrais de Segurança e Otimizaciones'
+        ],
+        perfil: 'Escritórios, clínicas e comércios que precisam de TI estável sem arcar com custos fixos de um departamento interno.',
+        garantia: 'Contratos avulsos ou planos mensais recorrentes com garantia total de disponibilidade durante o expediente.'
+      },
+      manutencao: {
+        cat: 'MANUTENÇÃO DE HARDWARE',
+        titulo: 'Manutenção & Upgrades de Computadores',
+        img: SVG_SRV_MANUTENCAO,
+        desc: 'Diagnóstico técnico transparente, higienização interna profunda, troca de pasta térmica e substituição de componentes.',
+        checklist: [
+          'Diagnóstico inicial detalhado antes de qualquer intervenção',
+          'Higienização interna completa com troca de pasta térmica de prata',
+          'Upgrade de memória RAM e instalação de SSD ultrarrápido',
+          'Formatação limpa com preservação e recuperação de dados',
+          'Testes de estresse térmico antes da devolução'
+        ],
+        etapas: [
+          'Fase 1: Entrada e Teste Inicial de Bancada no Laboratório',
+          'Fase 2: Envio de Orçamento Detalhado com Preço Fixo',
+          'Fase 3: Limpeza, Troca de Componentes e Instalação do Sistema',
+          'Fase 4: Teste de Queima (Burn-in) e Emissão do Termo de Garantia'
+        ],
+        perfil: 'Profissionais e empresas com máquinas lentas ou precisando de upgrade de performance.',
+        garantia: 'Garantia de 90 dias completa sobre os serviços executados e sobre todas as peças substituídas.'
+      },
+      consultoria: {
+        cat: 'CONSULTORIA DIGITAL',
+        titulo: 'Consultoria em Soluções Digitais & LGPD',
+        img: SVG_SRV_CONSULTORIA,
+        desc: 'Mapeamos o fluxo de trabalho da sua empresa para indicar as melhores tecnologias com foco em economia.',
+        checklist: [
+          'Mapeamento completo de processos manuais e softwares utilizados',
+          'Relatório comparativo de ferramentas no mercado com foco em economia',
+          'Plano estratégico por prioridades e capacidade de investimento',
+          'Adequação técnica dos sistemas às diretrizes da LGPD',
+          'Acompanhamento na contratação e migração de sistemas'
+        ],
+        etapas: [
+          'Fase 1: Entrevistas com Gestores e Mapeamento de Fluxos',
+          'Fase 2: Elaboração do Diagnóstico Digital e Matriz de Riscos',
+          'Fase 3: Apresentação do Plano Estratégico com Estimativa de ROI',
+          'Fase 4: Acompanhamento na Execução dos Projetos Prioritários'
+        ],
+        perfil: 'Empresas em fase de expansão que buscam automatizar rotinas e evitar desperdício de capital.',
+        garantia: 'Entrega de relatório impresso e digital detalhado com sessão de apresentação remota ou presencial.'
+      }
+    };
+
+    let servicoModalAtual = 'sites';
+    const modalServico = $('#modal-servico');
+
+    function abreModalServico(key) {
+      servicoModalAtual = key;
+      const data = dadosServicos[key];
+      $('#m-serv-cat').textContent = data.cat;
+      $('#m-serv-titulo').textContent = data.titulo;
+      const servImg = $('#m-serv-img');
+      servImg.src = data.img;
+      servImg.alt = data.titulo;
+      $('#m-serv-desc').textContent = data.desc;
+      $('#m-serv-checklist').innerHTML = data.checklist.map(item => `<li><i class="fa-solid fa-circle-check"></i> <span>${item}</span></li>`).join('');
+      $('#m-serv-etapas-box').innerHTML = data.etapas.map(e => `<div style="background:var(--paper); padding:14px; border-radius:var(--radius-sm); font-size:0.86rem; font-weight:600; border-left:3px solid var(--accent);">${e}</div>`).join('');
+      $('#m-serv-perfil').textContent = data.perfil;
+      $('#m-serv-garantia').textContent = data.garantia;
+
+      trocaTabModal(0, $$('.modal-tab-btn')[0]);
+      modalServico.showModal();
+    }
+    function fechaModalServico() { modalServico.close(); }
+    modalServico.addEventListener('click', (e) => { if (e.target === modalServico) fechaModalServico(); });
+
+    function trocaTabModal(idx, btn) {
+      $$('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      $$('.modal-tab-content').forEach((c, i) => c.classList.toggle('active', i === idx));
+    }
+
+    function setDiagOpt(btn, grupo) {
+      $$(`#diag-opts-${grupo} button`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function solicitaServicoModal() {
+      fechaModalServico();
+      const data = dadosServicos[servicoModalAtual];
+      $('#assunto').value = 'Proposta: ' + data.titulo;
+      $('#mensagem').value = 'Gostaria de solicitar um orçamento para o serviço de ' + data.titulo + '.';
+      window.location.hash = 'contato';
+      exibeToast('Preenchemos o formulário de contato com o serviço escolhido!');
+    }
+
+    // ===== PROCESSO INTERATIVO =====
+    const dadosProcesso = {
+      1: {
+        t: 'Etapa 1: Escuta & Diagnóstico',
+        d: 'Reunião inicial sem compromisso para análise do contexto da sua empresa, identificação dos gargalos e especificação inicial do escopo do projeto.',
+        img: SVG_PROC[1]
+      },
+      2: {
+        t: 'Etapa 2: Plano & Protótipo',
+        d: 'Desenho do protótipo navegável e elaboração do orçamento fechado com cronograma por fases para sua aprovação antes de iniciar.',
+        img: SVG_PROC[2]
+      },
+      3: {
+        t: 'Etapa 3: Construção Ágil',
+        d: 'Desenvolvimento em ciclos curtos com ambiente de testes para você acompanhar as telas e recursos conforme ganham forma.',
+        img: SVG_PROC[3]
+      },
+      4: {
+        t: 'Etapa 4: Lançamento & Suporte',
+        d: 'Publicação oficial do sistema ou site, treinamento presencial ou online da sua equipe e canal direto de suporte pós-entrega.',
+        img: SVG_PROC[4]
+      }
+    };
+    function mostraEtapa(num, el) {
+      $$('.etapa').forEach(e => e.classList.remove('active'));
+      el.classList.add('active');
+      $('#proc-titulo').textContent = dadosProcesso[num].t;
+      $('#proc-desc').textContent = dadosProcesso[num].d;
+      const procImg = $('#proc-img');
+      procImg.src = dadosProcesso[num].img;
+      procImg.alt = dadosProcesso[num].t;
+    }
+
+    // ===== PORTFÓLIO DE PROJETOS (24 PROJETOS CATALOGADOS COM ARTES VETORIAIS DEDICADAS) =====
+    const listaProjetos = [
+      { id:1, cat:'web', title:'Ateliê Lume', tag:'Site de Loja · 2026', desc:'Vitrine digital para ateliê com catálogo interativo de peças.', img: geraProjetoSVG('Ateliê Lume', 'web', 1) },
+      { id:2, cat:'web', title:'Clínica Vida Plena', tag:'Site Institucional · 2025', desc:'Portal médico com sistema de agendamento online de consultas.', img: geraProjetoSVG('Clínica Vida Plena', 'web', 2) },
+      { id:3, cat:'web', title:'Café Aroma', tag:'Site & Cardápio · 2024', desc:'Cardápio digital com pedidos integrados via WhatsApp.', img: geraProjetoSVG('Café Aroma', 'web', 3) },
+      { id:4, cat:'web', title:'Escola Pequeno Mundo', tag:'Portal Escolar · 2024', desc:'Site para escola infantil com galeria de atividades e área de pais.', img: geraProjetoSVG('Pequeno Mundo', 'web', 4) },
+      { id:5, cat:'web', title:'Meireles Advocacia', tag:'Site Corporativo · 2023', desc:'Portal jurídico com blog de artigos e formulário de consulta segura.', img: geraProjetoSVG('Meireles Advocacia', 'web', 5) },
+      { id:6, cat:'web', title:'Pet Shop Patinhas', tag:'E-commerce · 2023', desc:'Loja virtual com opções de entrega rápida em raio local.', img: geraProjetoSVG('Pet Shop Patinhas', 'web', 6) },
+      { id:7, cat:'web', title:'Academia Ritmo', tag:'Site de Serviços · 2022', desc:'Página de apresentação com planos e matrícula digital.', img: geraProjetoSVG('Academia Ritmo', 'web', 7) },
+      { id:8, cat:'web', title:'Trigo & Mel', tag:'Padaria Artesanal · 2022', desc:'Catálogo de produtos com encomendas online para festas.', img: geraProjetoSVG('Trigo & Mel', 'web', 8) },
+
+      { id:9, cat:'app', title:'Pulso Dashboard', tag:'Painel de Dados · 2026', desc:'Dashboard corporativo que transforma planilhas em relatórios gráficos.', img: geraProjetoSVG('Pulso Dashboard', 'app', 9) },
+      { id:10, cat:'app', title:'Orbe Comunidades', tag:'Aplicativo Móvel · 2025', desc:'App de agendamento de eventos e avisos locais de bairro.', img: geraProjetoSVG('Orbe Comunidades', 'app', 10) },
+      { id:11, cat:'app', title:'Fila Zero', tag:'Painel de Senhas · 2024', desc:'Sistema digital de chamadas de senha por notificação de celular.', img: geraProjetoSVG('Fila Zero', 'app', 11) },
+      { id:12, cat:'app', title:'Ronda Entregas', tag:'Gestor de Logística · 2024', desc:'Plataforma com mapa de rastreio em tempo real para entregadores.', img: geraProjetoSVG('Ronda Entregas', 'app', 12) },
+      { id:13, cat:'app', title:'Estoque Fácil', tag:'App Corporativo · 2023', desc:'Leitor de código de barras para contagem automatizada de estoque.', img: geraProjetoSVG('Estoque Fácil', 'app', 13) },
+      { id:14, cat:'app', title:'Caixa Clara', tag:'Gestão Financeira · 2023', desc:'Aplicativo de controle financeiro com alertas de metas.', img: geraProjetoSVG('Caixa Clara', 'app', 14) },
+      { id:15, cat:'app', title:'Vistoria Já', tag:'App Técnico · 2022', desc:'Emissão de laudos de vistoria com captura e anexo de fotos.', img: geraProjetoSVG('Vistoria Já', 'app', 15) },
+      { id:16, cat:'app', title:'Coopera Campo', tag:'Plataforma Agrícola · 2021', desc:'Gestão de pedidos e pagamentos diretos para cooperativa.', img: geraProjetoSVG('Coopera Campo', 'app', 16) },
+
+      { id:17, cat:'infra', title:'Horizonte Coworking', tag:'Infraestrutura Wi-Fi · 2026', desc:'Rede sem fio e cabeamento para 120 estações de trabalho simultâneas.', img: geraProjetoSVG('Horizonte Coworking', 'infra', 17) },
+      { id:18, cat:'infra', title:'Nimbus Cloud Migration', tag:'Servidor Nuvem · 2025', desc:'Migração completa de servidores físicos para nuvem com backup.', img: geraProjetoSVG('Nimbus Cloud', 'infra', 18) },
+      { id:19, cat:'infra', title:'Hospital Aurora', tag:'Rede Crítica · 2024', desc:'Cabeamento estruturado com redundância para ambiente médico.', img: geraProjetoSVG('Hospital Aurora', 'infra', 19) },
+      { id:20, cat:'infra', title:'Fórum Digital', tag:'Infraestrutura Contábil · 2023', desc:'Rede segura de dados com cópias de segurança diárias automatizadas.', img: geraProjetoSVG('Fórum Digital', 'infra', 20) },
+      { id:21, cat:'infra', title:'Colégio Alvorada', tag:'Infra Cobertura · 2023', desc:'Pontos de acesso Wi-Fi cobrindo todas as salas de aula.', img: geraProjetoSVG('Colégio Alvorada', 'infra', 21) },
+      { id:22, cat:'infra', title:'Rede Mercato', tag:'Rede Comercial · 2022', desc:'Integração de servidores centrais com caixas registradoras.', img: geraProjetoSVG('Rede Mercato', 'infra', 22) },
+      { id:23, cat:'infra', title:'Grupo Pátio', tag:'Segurança Eletrônica · 2021', desc:'Infraestrutura de controle de acesso e circuito fechado de câmeras.', img: geraProjetoSVG('Grupo Pátio', 'infra', 23) },
+      { id:24, cat:'infra', title:'Escritório Prisma', tag:'Rede de Alta Velocidade · 2021', desc:'Estações de renderização com rede de dados fibra óptica interna.', img: geraProjetoSVG('Escritório Prisma', 'infra', 24) }
+    ];
+
+    // Informações complementares por projeto. Não há promessa de garantia universal: cada escopo é descrito individualmente.
+    const detalhesProjetos = {
+      1:{solucao:'Loja digital para apresentar coleções, contar a história da marca e facilitar pedidos.',recursos:['Catálogo organizado por coleção','Galeria de fotos com foco nas peças','Layout adaptado para celular','Atalhos de contato e solicitação de orçamento'],foco:'Apresentação visual e descoberta de produtos'},
+      2:{solucao:'Portal institucional de clínica com fluxo de solicitação de consultas e conteúdo de orientação.',recursos:['Páginas de especialidades e equipe','Formulário de solicitação de horário','Informações de preparo e atendimento','Navegação acessível em dispositivos móveis'],foco:'Clareza das informações e agendamento'},
+      3:{solucao:'Cardápio digital pensado para consulta rápida e encaminhamento de pedidos ao atendimento do café.',recursos:['Categorias de bebidas e refeições','Descrições e destaques do cardápio','Acesso direto ao WhatsApp','Interface otimizada para celular'],foco:'Consulta simples e pedido sem fricção'},
+      4:{solucao:'Portal escolar para aproximar a escola das famílias e centralizar comunicados.',recursos:['Calendário e avisos escolares','Galeria de atividades','Área informativa para responsáveis','Páginas de turmas e projetos pedagógicos'],foco:'Comunicação entre escola e famílias'},
+      5:{solucao:'Presença institucional para escritório jurídico, com conteúdo informativo e canal de contato.',recursos:['Apresentação de áreas de atuação','Blog de artigos e atualizações','Formulário de consulta inicial','Estrutura de navegação sóbria e responsiva'],foco:'Credibilidade e contato profissional'},
+      6:{solucao:'E-commerce local para catálogo de produtos pet e organização de pedidos.',recursos:['Vitrine por categorias','Páginas de produto com detalhes','Fluxo de pedido e contato','Informações de entrega por região'],foco:'Compra local e relacionamento com clientes'},
+      7:{solucao:'Site de academia com apresentação dos planos e jornada digital de matrícula.',recursos:['Comparativo de planos','Apresentação de modalidades','Formulário de interesse','Informações de horários e localização'],foco:'Conversão de interessados em matrículas'},
+      8:{solucao:'Catálogo para padaria artesanal com destaque para produtos sazonais e encomendas.',recursos:['Vitrine de pães e confeitaria','Destaques de encomendas para eventos','Informações de ingredientes e tamanhos','Contato para consulta de disponibilidade'],foco:'Exposição de produtos e encomendas'},
+      9:{solucao:'Painel de indicadores para reunir dados operacionais e facilitar a leitura de resultados.',recursos:['Visão consolidada de indicadores','Gráficos e filtros por período','Resumo de metas e desempenho','Organização visual de dados'],foco:'Leitura rápida para apoiar decisões'},
+      10:{solucao:'Aplicativo comunitário para organizar eventos locais e avisos aos moradores.',recursos:['Agenda de atividades','Publicação de comunicados','Notificações de novidades','Navegação por temas e comunidades'],foco:'Participação e comunicação local'},
+      11:{solucao:'Painel de gestão de filas para organizar chamadas e reduzir dúvidas sobre atendimento.',recursos:['Emissão e acompanhamento de senhas','Painel de chamadas','Visualização de status da fila','Avisos para o público'],foco:'Organização do atendimento presencial'},
+      12:{solucao:'Ferramenta de logística para acompanhar rotas e status de entregas.',recursos:['Mapa de acompanhamento','Atualização de status da entrega','Painel de pedidos em andamento','Visão operacional para a equipe'],foco:'Visibilidade da operação de entregas'},
+      13:{solucao:'Aplicativo de inventário para apoiar contagens e atualização de produtos.',recursos:['Leitura de código de barras','Cadastro e consulta de itens','Registro de movimentações','Resumo de divergências de estoque'],foco:'Agilidade e organização do inventário'},
+      14:{solucao:'Aplicativo de controle financeiro para acompanhar entradas, despesas e objetivos.',recursos:['Registro de receitas e despesas','Categorias personalizadas','Painel de metas','Alertas e visão mensal'],foco:'Planejamento financeiro cotidiano'},
+      15:{solucao:'Aplicativo de vistoria para registrar observações e reunir evidências em relatórios.',recursos:['Formulários por tipo de vistoria','Captura e anexação de fotos','Registro de observações','Exportação de laudos organizados'],foco:'Padronização dos registros técnicos'},
+      16:{solucao:'Plataforma de cooperativa para organizar pedidos e facilitar a relação entre produtores e compradores.',recursos:['Catálogo de produtos disponíveis','Registro e acompanhamento de pedidos','Resumo de pagamentos','Área de informações da cooperativa'],foco:'Conexão comercial e gestão cooperativa'},
+      17:{solucao:'Projeto de rede sem fio e cabeamento para um ambiente de trabalho compartilhado.',recursos:['Planejamento de pontos de acesso','Distribuição de cobertura Wi-Fi','Organização do cabeamento','Dimensionamento para uso simultâneo'],foco:'Conectividade para equipes e visitantes'},
+      18:{solucao:'Plano de migração de servidores locais para ambiente em nuvem, com organização dos dados.',recursos:['Inventário de serviços e dependências','Planejamento de migração por etapas','Configuração de cópias de segurança','Validação de acesso após a migração'],foco:'Continuidade e modernização da infraestrutura'},
+      19:{solucao:'Infraestrutura de rede planejada para apoiar sistemas e comunicação de um ambiente de saúde.',recursos:['Cabeamento estruturado','Segmentação de rede por necessidade','Planejamento de redundância','Documentação dos pontos e conexões'],foco:'Organização e disponibilidade da rede'},
+      20:{solucao:'Rede de dados para escritório contábil com foco em organização e proteção das informações.',recursos:['Estruturação de rede interna','Perfis de acesso por equipe','Rotina de cópias de segurança','Documentação da infraestrutura'],foco:'Acesso organizado e proteção de dados'},
+      21:{solucao:'Ampliação da cobertura Wi-Fi para conectar salas e espaços de aprendizagem.',recursos:['Levantamento de áreas de cobertura','Distribuição de pontos de acesso','Configuração de rede para equipe e alunos','Verificação de sinal por ambiente'],foco:'Conectividade no ambiente escolar'},
+      22:{solucao:'Integração da rede comercial com sistemas centrais e pontos de venda.',recursos:['Conexão entre unidades e servidores','Integração de caixas registradoras','Organização de acessos','Mapeamento dos equipamentos conectados'],foco:'Comunicação entre operação e gestão'},
+      23:{solucao:'Estrutura de controle de acesso e monitoramento para áreas definidas do empreendimento.',recursos:['Planejamento dos pontos de monitoramento','Organização de câmeras e acessos','Centralização das visualizações','Documentação dos equipamentos'],foco:'Monitoramento e controle de circulação'},
+      24:{solucao:'Rede de alta velocidade para estações de trabalho que lidam com arquivos e tarefas exigentes.',recursos:['Planejamento de rede cabeada','Conexões por fibra óptica interna','Organização dos pontos de trabalho','Verificação de conectividade entre estações'],foco:'Desempenho de rede para fluxo de trabalho intenso'}
+    };
+
+    let filtroCatAtual = 'todos', termoBusca = '', projetosExpandidos = false;
+
+    function renderizaProjetos() {
+      const container = $('#portfolio-container');
+      const toggleContainer = $('#proj-toggle-container');
+      const filtrados = listaProjetos.filter(p => {
+        const catOk = (filtroCatAtual === 'todos' || p.cat === filtroCatAtual);
+        const buscaOk = (p.title + ' ' + p.tag + ' ' + p.desc).toLowerCase().includes(termoBusca);
+        return catOk && buscaOk;
+      });
+
+      if (filtrados.length === 0) {
+        container.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:40px; color:var(--muted);">Nenhum projeto encontrado nesta busca.</p>';
+        toggleContainer.innerHTML = '';
+      } else {
+        const visiveis = projetosExpandidos ? filtrados : filtrados.slice(0, 6);
+        container.innerHTML = visiveis.map(p => `
+          <article class="project" onclick="abreModalProjeto(${p.id})">
+            <img src="${p.img}" alt="${p.title}" loading="lazy">
+            <span class="ver">Ver detalhes</span>
+            <div class="project-info">
+              <small>${p.tag}</small>
+              <h3>${p.title}</h3>
+              <p>${p.desc}</p>
+            </div>
+          </article>
+        `).join('');
+
+        if (filtrados.length > 6) {
+          if (!projetosExpandidos) {
+            const faltantes = filtrados.length - 6;
+            toggleContainer.innerHTML = `
+              <button class="btn btn-navy" onclick="toggleExpandProjetos(true)">
+                Ver mais projetos ↓ (${faltantes} restantes)
+              </button>
+            `;
+          } else {
+            toggleContainer.innerHTML = `
+              <button class="btn btn-ghost" style="color:var(--primary); border-color:var(--line);" onclick="toggleExpandProjetos(false)">
+                Ver menos ↑
+              </button>
+            `;
+          }
+        } else {
+          toggleContainer.innerHTML = '';
+        }
+      }
+
+      $('#proj-contagem').textContent = `Exibindo ${Math.min(projetosExpandidos ? filtrados.length : 6, filtrados.length)} de ${filtrados.length} projetos catalogados (${listaProjetos.length} no total).`;
+    }
+
+    function toggleExpandProjetos(expandir) {
+      projetosExpandidos = expandir;
+      renderizaProjetos();
+      if (!expandir) {
+        document.querySelector('#projetos').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    $$('.filtros .chip').forEach(b => {
+      b.addEventListener('click', () => {
+        $$('.filtros .chip').forEach(x => {
+          x.classList.remove('active');
+          x.setAttribute('aria-pressed', 'false');
+        });
+        b.classList.add('active');
+        b.setAttribute('aria-pressed', 'true');
+        filtroCatAtual = b.dataset.filtro;
+        projetosExpandidos = false;
+        renderizaProjetos();
+      });
+    });
+
+    $('#busca-proj').addEventListener('input', (e) => {
+      termoBusca = e.target.value.toLowerCase().trim();
+      projetosExpandidos = false;
+      renderizaProjetos();
+    });
+
+    const modalProjeto = $('#modal-projeto');
+    function abreModalProjeto(id) {
+      const proj = listaProjetos.find(p => p.id === id);
+      if (!proj) return;
+      $('#mp-cat').textContent = proj.tag;
+      $('#mp-titulo').textContent = proj.title;
+      const mpImg = $('#mp-img');
+      mpImg.src = proj.img;
+      mpImg.alt = proj.title;
+      $('#mp-texto').textContent = proj.desc;
+      const extra = detalhesProjetos[proj.id] || {solucao:proj.desc,recursos:[],foco:'Escopo apresentado no portfólio'};
+      $('#mp-detalhes').innerHTML = `
+        <div class="project-detail-grid">
+          <div><small>ÁREA</small><strong>${proj.cat === 'web' ? 'Sites & plataformas' : proj.cat === 'app' ? 'Apps & painéis' : 'Infraestrutura'}</strong></div>
+          <div><small>FOCO DO PROJETO</small><strong>${extra.foco}</strong></div>
+        </div>
+        <h4>Sobre a solução</h4><p>${extra.solucao}</p>
+        <h4>Escopo e recursos</h4><ul>${extra.recursos.map(item => `<li>${item}</li>`).join('')}</ul>
+        <p class="project-detail-note">Os itens descrevem o escopo demonstrativo deste projeto. Prazos, suporte e condições são definidos individualmente em cada proposta.</p>`;
+      modalProjeto.showModal();
+    }
+    function fechaModalProjeto() { modalProjeto.close(); }
+    modalProjeto.addEventListener('click', (e) => { if (e.target === modalProjeto) fechaModalProjeto(); });
+
+    // ===== DIFERENCIAIS =====
+    function trocaDif(idx) {
+      $$('.aba').forEach((a, i) => {
+        a.setAttribute('aria-selected', i === idx);
+        $('#dpainel-' + i).hidden = (i !== idx);
+      });
+    }
+
+    // ===== 24 DEPOIMENTOS DE CLIENTES COM RETRATOS VETORIAIS DE AVATAR =====
+    const bancoDepoimentos = {
+      sites: [
+        { id:1, nome:'Mariana Costa', cargo:'Proprietária · Ateliê Lume', foto: geraAvatarSVG(1, '#1e3a5f', '#c6a15b', '#fcd34d', true), texto:'Chegamos com uma ideia confusa e saímos com um site elegante, rápido e simples de atualizar. As vendas online subiram consideravelmente.', curtir:18 },
+        { id:2, nome:'Henrique Duarte', cargo:'Gerente · Café Aroma', foto: geraAvatarSVG(2, '#0f1c2e', '#451a03', '#f87171'), texto:'Após a publicação do cardápio digital, nossos pedidos online aumentaram. Os clientes elogiam a facilidade de navegar no celular.', curtir:14 },
+        { id:3, nome:'Paula Nogueira', cargo:'Diretora · Escola Pequeno Mundo', foto: geraAvatarSVG(3, '#0b192c', '#14b8a6', '#fbbf24', true), texto:'As famílias agora encontram todas as informações da escola em um só lugar. A equipe nos treinou com muita paciência.', curtir:22 },
+        { id:4, nome:'Dr. Fernando Meireles', cargo:'Sócio · Meireles Advocacia', foto: geraAvatarSVG(4, '#050d18', '#1e293b', '#e2e8f0'), texto:'O site institucional nos trouxe contatos muito mais qualificados. Design sóbrio, elegante e perfeito para nossa área.', curtir:11 },
+        { id:5, nome:'Carla Petroni', cargo:'Gestora · Pet Shop Patinhas', foto: geraAvatarSVG(5, '#1e3a5f', '#b45309', '#fde047'), texto:'A loja virtual simplificou as entregas locais. O sistema é ágil e o suporte sempre tira nossas dúvidas no mesmo dia.', curtir:9 },
+        { id:6, nome:'Lucas Ritmo', cargo:'Diretor · Academia Ritmo', foto: geraAvatarSVG(6, '#0f1c2e', '#0369a1', '#f87171', true), texto:'O módulo de matrículas e planos no site facilitou o recebimento das mensalidades. Recomendo o trabalho da TechConnect!', curtir:16 }
+      ],
+      suporte: [
+        { id:7, nome:'Rafael Mendes', cargo:'Gestor de TI · Escritório Prisma', foto: geraAvatarSVG(7, '#0b192c', '#0f172a', '#e2e8f0'), texto:'Os chamados técnicos do dia a dia passaram a ser resolvidos em minutos. Além da agilidade, nos ensinam a evitar novas falhas.', curtir:15 },
+        { id:8, nome:'Dra. Beatriz Lemos', cargo:'Diretora · Clínica Vida Plena', foto: geraAvatarSVG(8, '#1e3a5f', '#c6a15b', '#fcd34d', true), texto:'Nossa clínica não pode ter sistemas parados. Com o suporte da TechConnect, temos resposta ágil e explicações simples.', curtir:24 },
+        { id:9, nome:'Otávio Prado', cargo:'Contador Principal · Fórum Contábil', foto: geraAvatarSVG(9, '#0f1c2e', '#334155', '#cbd5e1'), texto:'Rede, computadores e e-mails totalmente organizados. Tenho a tranquilidade de contar com uma equipe de confiança.', curtir:13 },
+        { id:10, nome:'Juliana Torres', cargo:'Coordenadora · ONG Vida', foto: geraAvatarSVG(10, '#050d18', '#e11d48', '#fde047'), texto:'Atendimento preventivo excelente. Monitoram nossos servidores e corrigem falhas antes mesmo de percebermos.', curtir:19 },
+        { id:11, nome:'Marcelo Vilela', cargo:'Administrador · Rede Mercato', foto: geraAvatarSVG(11, '#1e3a5f', '#15803d', '#f87171', true), texto:'Suporte em dia de pico nos caixas é fundamental. A equipe sempre nos atende com extrema prioridade.', curtir:8 },
+        { id:12, nome:'Patrícia Santos', cargo:'Gerente · Coworking Horizonte', foto: geraAvatarSVG(12, '#0f1c2e', '#c6a15b', '#fcd34d'), texto:'Manter 120 estações de trabalho conectadas não é fácil. A TechConnect cuida de tudo com maestria.', curtir:20 }
+      ],
+      manutencao: [
+        { id:13, nome:'Camila Ribeiro', cargo:'Designer Autônoma', foto: geraAvatarSVG(13, '#0b192c', '#7c3aed', '#fde047', true), texto:'Meu notebook estava lento e esquentava muito. Voltou do laboratório como novo, com orçamento transparente e garantia.', curtir:17 },
+        { id:14, nome:'Professor Sérgio Barbosa', cargo:'Educador', foto: geraAvatarSVG(14, '#1e3a5f', '#1e293b', '#cbd5e1'), texto:'Recuperaram arquivos essenciais que eu julgava perdidos no HD. Foram extremamente honestos sobre o que valia a pena trocar.', curtir:26 },
+        { id:15, nome:'Letícia Araújo', cargo:'Estudante de Arquitetura', foto: geraAvatarSVG(15, '#0f1c2e', '#b45309', '#fcd34d'), texto:'Fiz o upgrade para SSD e memória RAM com um valor justo. O computador ganhou anos de vida útil para projetos 3D.', curtir:12 },
+        { id:16, nome:'Roberto Campos', cargo:'Fotógrafo Profissional', foto: geraAvatarSVG(16, '#050d18', '#0f172a', '#e2e8f0', true), texto:'Troca de peça rápida e higienização interna impecável da minha workstation de edição de fotos.', curtir:10 },
+        { id:17, nome:'Vanessa Lins', cargo:'Empresária', foto: geraAvatarSVG(17, '#1e3a5f', '#c6a15b', '#fde047'), texto:'Levei quatro computadores do escritório para manutenção preventiva. Fizeram um serviço impecável.', curtir:14 },
+        { id:18, nome:'Diego Franco', cargo:'Desenvolvedor Freelance', foto: geraAvatarSVG(18, '#0f1c2e', '#0284c7', '#f87171'), texto:'Atendimento rápido no laboratório com laudo técnico claro e peças de reposição de primeira linha.', curtir:11 }
+      ],
+      consultoria: [
+        { id:19, nome:'Fernando Vilela', cargo:'Dono de Loja', foto: geraAvatarSVG(19, '#0b192c', '#334155', '#e2e8f0', true), texto:'Eu não sabia por onde começar a digitalizar meu negócio. A consultoria organizou as prioridades por etapas no meu orçamento.', curtir:21 },
+        { id:20, nome:'Marcos Teixeira', cargo:'Diretor Comercial · Grupo Pátio', foto: geraAvatarSVG(20, '#1e3a5f', '#0f172a', '#cbd5e1'), texto:'Em poucas reuniões tínhamos o diagnóstico completo e o plano de automação. Foi o melhor investimento que fizemos no ano.', curtir:18 },
+        { id:21, nome:'Renata Silveira', cargo:'Gestora de Operações', foto: geraAvatarSVG(21, '#0f1c2e', '#c6a15b', '#fcd34d'), texto:'Ajudaram-nos a escolher os softwares certos sem gastar demais com licenças desnecessárias. Economizamos tempo e dinheiro.', curtir:15 },
+        { id:22, nome:'Gustavo Alencar', cargo:'Consultor Financeiro', foto: geraAvatarSVG(22, '#050d18', '#15803d', '#f87171', true), texto:'Mapeamento detalhado e suporte na adequação à LGPD. Profissionais que realmente entendem do mercado.', curtir:13 },
+        { id:23, nome:'Aline Castro', cargo:'Diretora de RH', foto: geraAvatarSVG(23, '#1e3a5f', '#e11d48', '#fde047'), texto:'A orientação para treinamento da equipe fez toda a diferença na adaptação do novo sistema da empresa.', curtir:9 },
+        { id:24, nome:'Thiago Nogueira', cargo:'Gerente de Projetos', foto: geraAvatarSVG(24, '#0f1c2e', '#0369a1', '#cbd5e1'), texto:'Consultoria focada em resultados. Recomendo para qualquer empresa que precisa se modernizar com segurança.', curtir:17 }
+      ]
+    };
+
+    let abaDepoimentoAtual = 'sites';
+    const depoimentosExpandidos = { sites: false, suporte: false, manutencao: false, consultoria: false };
+
+    function renderizaDepoimentos() {
+      const container = $('#depoimentos-grid-container');
+      const toggleContainer = $('#depoimentos-toggle-container');
+      const lista = bancoDepoimentos[abaDepoimentoAtual] || [];
+      const estaExpandido = depoimentosExpandidos[abaDepoimentoAtual];
+
+      const listaExibida = estaExpandido ? lista : lista.slice(0, 3);
+
+      container.innerHTML = `
+        <div class="dep-painel">
+          ${listaExibida.map(d => `
+            <figure class="depo">
+              <div class="stars" role="img" aria-label="5 de 5 estrelas">★★★★★</div>
+              <blockquote><p>"${d.texto}"</p></blockquote>
+              <figcaption>
+                <img class="depo-avatar-img" src="${d.foto}" alt="${d.nome}" loading="lazy">
+                <div class="depo-info">
+                  <strong>${d.nome}</strong>
+                  <span>${d.cargo}</span>
+                </div>
+                <button class="curtir" type="button" onclick="curteDepoimento(${d.id}, this)" aria-pressed="false">
+                  <span>♡</span> <b>${d.curtir}</b>
+                </button>
+              </figcaption>
+            </figure>
+          `).join('')}
+        </div>
+      `;
+
+      if (lista.length > 3) {
+        if (!estaExpandido) {
+          const faltantes = lista.length - 3;
+          toggleContainer.innerHTML = `
+            <button class="btn btn-gold" onclick="toggleExpandDepoimentos(true)">
+              Ler mais comentários ↓ (${faltantes} restantes)
+            </button>
+          `;
+        } else {
+          toggleContainer.innerHTML = `
+            <button class="btn btn-ghost" style="color:var(--primary); border-color:var(--line);" onclick="toggleExpandDepoimentos(false)">
+              Ler menos ↑
+            </button>
+          `;
+        }
+      } else {
+        toggleContainer.innerHTML = '';
+      }
+    }
+
+    function toggleExpandDepoimentos(expandir) {
+      depoimentosExpandidos[abaDepoimentoAtual] = expandir;
+      renderizaDepoimentos();
+      if (!expandir) {
+        document.querySelector('#depoimentos').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function trocaAbaDepoimentos(cat) {
+      abaDepoimentoAtual = cat;
+      $$('.dep-abas .chip').forEach(c => c.classList.remove('active'));
+      $('#deptab-' + cat).classList.add('active');
+      renderizaDepoimentos();
+    }
+
+    function curteDepoimento(id, btn) {
+      const emDep = bancoDepoimentos[abaDepoimentoAtual].find(x => x.id === id);
+      if (!emDep) return;
+      const curtiu = btn.getAttribute('aria-pressed') === 'true';
+      if (!curtiu) {
+        emDep.curtir++;
+        btn.setAttribute('aria-pressed', 'true');
+        btn.querySelector('span').textContent = '♥';
+      } else {
+        emDep.curtir--;
+        btn.setAttribute('aria-pressed', 'false');
+        btn.querySelector('span').textContent = '♡';
+      }
+      btn.querySelector('b').textContent = emDep.curtir;
+    }
+
+    function enviaNovoDepoimento(e) {
+      e.preventDefault();
+      const nome = $('#dep-nome').value.trim();
+      const cargo = $('#dep-cargo').value.trim();
+      const servico = $('#dep-servico').value;
+      const texto = $('#dep-texto').value.trim();
+
+      const novo = {
+        id: Date.now(),
+        nome: nome,
+        cargo: cargo,
+        foto: geraAvatarSVG(Date.now(), '#0b192c', '#c6a15b', '#fcd34d'),
+        texto: texto,
+        curtir: 1
+      };
+
+      bancoDepoimentos[servico].unshift(novo);
+      depoimentosExpandidos[servico] = true;
+      $('#form-novo-depoimento').reset();
+      trocaAbaDepoimentos(servico);
+      exibeToast('Obrigado! Seu depoimento foi publicado com sucesso na aba correspondente.');
+      window.location.hash = 'depoimentos';
+    }
+
+    // ===== SIMULADOR DE PROJETOS =====
+    const PRECOS_SIMULADOR = {
+      sites: { base: 1800, prazo: '3 a 5 semanas' },
+      suporte: { base: 280, prazo: 'Atendimento prioritário em até 2h' },
+      manutencao: { base: 140, prazo: '1 a 3 dias úteis em laboratório' },
+      consultoria: { base: 950, prazo: '1 a 2 semanas até o plano final' }
+    };
+    let servicoSimAtual = 'sites';
+
+    function selecionaSimServico(btn, serv) {
+      $$('.sim-servicos .chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      servicoSimAtual = serv;
+      calculaSimulacao();
+    }
+
+    function calculaSimulacao() {
+      const nivel = +$('#nivel').value;
+      const niveisTxt = ['Muito Pequeno', 'Pequeno', 'Médio', 'Grande', 'Muito Grande'];
+      $('#nivel-txt').textContent = niveisTxt[nivel - 1];
+
+      const dados = PRECOS_SIMULADOR[servicoSimAtual];
+      let extras = 0;
+      $$('.sim-extra input:checked').forEach(x => extras += +x.dataset.valor);
+
+      const total = (dados.base * (1 + (nivel - 1) * 0.5)) + extras;
+      const min = Math.round(total * 0.85);
+      const max = Math.round(total * 1.15);
+
+      $('#sim-valor').textContent = `R$ ${min.toLocaleString('pt-BR')} a R$ ${max.toLocaleString('pt-BR')}`;
+      $('#sim-prazo').textContent = `Prazo médio estimado: ${dados.prazo}.`;
+    }
+
+    function enviarSimulacaoFormulario() {
+      const faixa = $('#sim-valor').textContent;
+      const porte = $('#nivel-txt').textContent;
+      $('#assunto').value = `Simulação de Projeto - Porte ${porte}`;
+      $('#mensagem').value = `Realizei uma simulação no site para o serviço de ${servicoSimAtual.toUpperCase()} (Porte: ${porte}). Estimativa gerada: ${faixa}. Gostaria de solicitar uma proposta comercial.`;
+      window.location.hash = 'contato';
+      exibeToast('Simulação transferida para o formulário de contato!');
+    }
+
+    // ===== FORMULÁRIO DE CONTATO =====
+    function enviaFormularioContato(e) {
+      e.preventDefault();
+      const nome = $('#nome').value.split(' ')[0];
+      exibeToast(`Obrigado, ${nome}! Mensagem enviada com sucesso.`);
+      $('#contact-form').reset();
+    }
+
+    // ===== SELETOR DE PALETA FLUTUANTE DE CORES =====
+    const PALETAS = [
+      { n: 'Azul & Ouro', p: '#0b192c', d: '#050d18', a: '#c6a15b' },
+      { n: 'Esmeralda Profundo', p: '#064e3b', d: '#022c22', a: '#34d399' },
+      { n: 'Grafite & Cobre', p: '#1e293b', d: '#0f172a', a: '#f97316' },
+      { n: 'Índigo Noturno', p: '#1e1b4b', d: '#0f0e26', a: '#eab308' },
+      { n: 'Oceano & Areia', p: '#0f4c81', d: '#082845', a: '#f4a261' }
+    ];
+
+    const paletaOpcoes = $('#paleta-opcoes');
+    paletaOpcoes.innerHTML = PALETAS.map((p, i) => `
+      <button type="button" title="${p.n}" onclick="aplicaPaleta(${i})" style="background:linear-gradient(135deg, ${p.p} 50%, ${p.a} 50%)"></button>
+    `).join('');
+
+    $('#paleta-toggle').addEventListener('click', () => {
+      paletaOpcoes.hidden = !paletaOpcoes.hidden;
+    });
+
+    function aplicaPaleta(idx) {
+      const p = PALETAS[idx];
+      document.documentElement.style.setProperty('--primary', p.p);
+      document.documentElement.style.setProperty('--primary-deep', p.d);
+      document.documentElement.style.setProperty('--accent', p.a);
+      paletaOpcoes.hidden = true;
+      exibeToast(`Paleta "${p.n}" aplicada!`);
+    }
+
+    // ===== EASTER EGGS =====
+
+    // Easter Egg: Triplo Clique no Título do Banner -> Confetes & Mensagem Secreta da Equipe
+    let cliquesTitulo = 0, timerTitulo;
+    const heroTitle = $('#hero-title');
+    if (heroTitle) {
+      heroTitle.addEventListener('click', () => {
+        cliquesTitulo++;
+        clearTimeout(timerTitulo);
+        timerTitulo = setTimeout(() => cliquesTitulo = 0, 1500);
+        if (cliquesTitulo >= 3) {
+          cliquesTitulo = 0;
+          if (typeof confetti === 'function') {
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#c6a15b', '#e6c88b', '#14b8a6', '#ffffff'] });
+          }
+          exibeToast('🎉 Mensagem Secreta: Obrigado por fazer parte da história de 25+ anos da TechConnect!');
+        }
+      });
+    }
+
+    // Easter Egg 1: 5 Cliques no Logo -> Matrix Rain Overlay
+    let cliquesLogo = 0, timerLogo;
+    $('#logo-emblem').addEventListener('click', (e) => {
+      e.preventDefault();
+      cliquesLogo++;
+      clearTimeout(timerLogo);
+      timerLogo = setTimeout(() => cliquesLogo = 0, 2000);
+      if (cliquesLogo >= 5) {
+        cliquesLogo = 0;
+        iniciaMatrix();
+      }
+    });
+
+    let matrixInterval;
+    function iniciaMatrix() {
+      const overlay = $('#matrix-overlay');
+      overlay.classList.add('active');
+      const canvas = $('#matrix-canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const chars = '0123456789TECHCONNECTTECHCONNECT';
+      const fontSize = 14;
+      const columns = canvas.width / fontSize;
+      const drops = Array(Math.floor(columns)).fill(1);
+
+      clearInterval(matrixInterval);
+      matrixInterval = setInterval(() => {
+        ctx.fillStyle = 'rgba(5, 13, 24, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#10b981';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }, 33);
+      exibeToast('Modo Matrix ativado! Pressione Esc para sair.');
+    }
+    function fechaMatrix() {
+      clearInterval(matrixInterval);
+      $('#matrix-overlay').classList.remove('active');
+    }
+
+    // Easter Egg 2: Digitar "tech" -> Terminal Dev Console
+    let bufferTeclas = '';
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        fechaMatrix();
+        fechaDevConsole();
+        fechaJogoBug();
+      }
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      bufferTeclas = (bufferTeclas + e.key.toLowerCase()).slice(-4);
+      if (bufferTeclas === 'tech') {
+        bufferTeclas = '';
+        abreDevConsole();
+      }
+    });
+
+    const devConsole = $('#dev-console');
+    function abreDevConsole() {
+      devConsole.classList.add('active');
+      $('#console-input').focus();
+      exibeToast('Terminal Dev Console aberto!');
+    }
+    function fechaDevConsole() { devConsole.classList.remove('active'); }
+
+    function trataComandoConsole(e) {
+      if (e.key === 'Enter') {
+        const input = $('#console-input');
+        const cmd = input.value.trim().toLowerCase();
+        const out = $('#console-output');
+        out.innerHTML += `<div><span style="color:#ffffff">&gt; ${cmd}</span></div>`;
+        input.value = '';
+
+        if (cmd === 'help') {
+          out.innerHTML += `<div>Comandos: <span style="color:var(--accent-light)">sobre, 25anos, 99, matrix, bug, clear, exit</span></div>`;
+        } else if (cmd === 'sobre') {
+          out.innerHTML += `<div>🚀 TechConnect: Tecnologia com propósito e acompanhamento contínuo em todo o Brasil.</div>`;
+        } else if (cmd === '25anos') {
+          out.innerHTML += `<div>⏳ 25+ Anos de tradição e inovação contínua.</div>`;
+        } else if (cmd === '99') {
+          out.innerHTML += `<div>⭐ Mais de 99% de aprovação e satisfação comprovada.</div>`;
+        } else if (cmd === 'matrix') {
+          fechaDevConsole();
+          iniciaMatrix();
+        } else if (cmd === 'bug') {
+          fechaDevConsole();
+          iniciaJogoBug();
+        } else if (cmd === 'clear') {
+          out.innerHTML = '';
+        } else if (cmd === 'exit') {
+          fechaDevConsole();
+        } else {
+          out.innerHTML += `<div style="color:#ef4444">Comando não reconhecido. Digite 'help'.</div>`;
+        }
+        out.scrollTop = out.scrollHeight;
+      }
+    }
+
+    // Easter Egg 3: Konami Code -> Modo Hiper-Glow
+    const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let idxKonami = 0;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === konami[idxKonami]) {
+        idxKonami++;
+        if (idxKonami === konami.length) {
+          document.body.style.filter = 'hue-rotate(90deg)';
+          exibeToast('🌈 Modo Hiper-Glow ativado!');
+          setTimeout(() => document.body.style.filter = 'none', 6000);
+          idxKonami = 0;
+        }
+      } else {
+        idxKonami = 0;
+      }
+    });
+
+    // Easter Egg 4: Duplo Clique no "25+" Stat -> Cápsula do Tempo Toast
+    $('#stat-25anos').addEventListener('dblclick', () => {
+      exibeToast('⏳ Cápsula do Tempo: 25+ Anos traduzindo complexidade em simplicidade em todo o Brasil.');
+    });
+
+    // Easter Egg 5: Ponto Secreto no Rodapé -> Caça ao Bug Mini-Game
+    let bugScore = 0;
+    function iniciaJogoBug() {
+      bugScore = 0;
+      $('#bug-score').textContent = 'Bugs: 0 / 5';
+      $('#bug-game').classList.add('active');
+      geraBug();
+    }
+    function fechaJogoBug() { $('#bug-game').classList.remove('active'); }
+
+    function geraBug() {
+      const arena = $('#bug-arena');
+      arena.innerHTML = '';
+      if (bugScore >= 5) {
+        exibeToast('🎉 Parabéns! Você eliminou todos os bugs e ganhou o Certificado de Caçador!');
+        fechaJogoBug();
+        return;
+      }
+      const bug = document.createElement('div');
+      bug.className = 'bug-target';
+      bug.innerHTML = '🐛';
+      bug.style.top = Math.floor(Math.random() * 75) + '%';
+      bug.style.left = Math.floor(Math.random() * 85) + '%';
+      bug.onclick = () => {
+        bugScore++;
+        $('#bug-score').textContent = `Bugs: ${bugScore} / 5`;
+        geraBug();
+      };
+      arena.appendChild(bug);
+    }
+
+    // INICIA COMPONENTES AO CARREGAR
+    window.addEventListener('load', () => {
+      carregaIlustracoesEstaticas();
+      renderizaProjetos();
+      renderizaDepoimentos();
+      calculaSimulacao();
+    });
+  </script>
+</body>
+</html>
